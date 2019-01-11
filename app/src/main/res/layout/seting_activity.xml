@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/txtbackapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:text="Back to app"
+        android:textColor="#EEEEEE	"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txttutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:text="Tutorial"
+        android:textColor="#EEEEEE	"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+
+        android:scrollbars="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txtvolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="28dp"
+                android:background="@android:color/transparent"
+                android:text="Boost input volume:"
+                android:textColor="#EEEEEE	"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.nightonke.jellytogglebutton.JellyToggleButton
+                android:id="@+id/tgvolum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="132dp"
+                android:layout_marginStart="132dp"
+                android:layout_marginTop="16dp"
+
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtvolume" />
+
+            <TextView
+                android:id="@+id/txtpitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="16dp"
+                android:text="Reference pitch A:"
+                android:textColor="#EEEEEE	"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tgvolum" />
+
+            <TextView
+                android:id="@+id/txtnotesection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="68dp"
+                android:text="Tuning note selection:"
+                android:textColor="#EEEEEE	"
+                android:textSize="18sp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtpitch" />
+
+            <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/segmentedSelection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                segmentedgroup:layout_constraintEnd_toEndOf="parent"
+                segmentedgroup:layout_constraintStart_toStartOf="parent"
+                segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtnotesection"
+                segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_corner_radius="5dp">
+
+                <RadioButton
+                    android:id="@+id/rdbautomatic"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="automatic"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbpalette"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="palette"
+
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbchromatic"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:text="chromatic"
+                    android:textSize="12sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <TextView
+                android:id="@+id/txtnotePalette"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="#EEEEEE	"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/segmentedSelection" />
+
+            <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/segmentedPalete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:weightSum="6"
+                segmentedgroup:layout_constraintEnd_toEndOf="parent"
+                segmentedgroup:layout_constraintStart_toStartOf="parent"
+                segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtnotePalette"
+                segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_corner_radius="5dp">
+
+                <RadioButton
+                    android:id="@+id/rdbPalete1"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbPalete2"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbPalete3"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbPalete4"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbPalete5"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbPalete6"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/segmentedInterval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                segmentedgroup:layout_constraintEnd_toEndOf="parent"
+                segmentedgroup:layout_constraintStart_toStartOf="parent"
+                segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtnotePalette"
+                segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_corner_radius="5dp">
+
+                <RadioButton
+                    android:id="@+id/rdbOctaves"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="octaves"
+                    android:textSize="15sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbFourths"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="fourths"
+                    android:textSize="15sp" />
+
+                <RadioButton
+                    android:id="@+id/rdbFifths"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="fifths"
+                    android:textSize="15sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <NumberPicker
+                android:id="@+id/numberpicker"
+                android:layout_width="wrap_content"
+                android:layout_height="128dp"
+
+                android:background="@color/black"
+                android:backgroundTint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/segmentedPalete"
+                tools:ignore="MissingConstraints"></NumberPicker>
+
+            <TextView
+                android:id="@+id/txtNotePalettePreset"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="140dp"
+                android:text="Note palette preset"
+
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.037"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/segmentedPalete" />
+
+            <TextView
+                android:id="@+id/txtPreset"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="30dp"
+                android:gravity="center"
+                android:text="Preset"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtNotePalettePreset" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+
+</android.support.constraint.ConstraintLayout>
