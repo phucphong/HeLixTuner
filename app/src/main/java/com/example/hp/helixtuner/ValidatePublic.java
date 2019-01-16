@@ -40,7 +40,7 @@ public class ValidatePublic {
     public static String BMUS_Key_note5 = "note5";
     public static String BMUS_Key_note6 = "note6";
     public static String BMNote1, BMNote2, BMNote3, BMNote4, BMNote5, BMNote6;
-    public static int post1, post2, post3, post4, post5, post6;
+    public static int note1 =1, note2=3, note3=9, note4=14, note5=14, note6=39;
     public static int red, gren, blue;
     public static SharedPreferences sharedPreferencesAutomatic, sharedPreferencpalette, sharedPreferencChromatic;
 

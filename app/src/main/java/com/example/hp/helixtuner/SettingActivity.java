@@ -56,27 +56,23 @@ import static com.example.hp.helixtuner.ValidatePublic.*;
 
 
 public class SettingActivity extends Fragment {
+
     String[] arrayPicker;
     PrefManager prefManager;
     private String subFolder = "/userdata";
     private String file = "helix.txt";
-    SoundPool soundPool;
+    ConVertNote conVertNote;
     AlertDialog dialog;
     Bundle mBundle = new Bundle();
-    static int[] sm;
-    int number1 = 0, number2 = 9, number3 = 11, number4 = 46, number5 = 55, number6 = 40;
-
     RadioButton rdbFifthsSetting, rdbFourthsSetting, rdbOctevalSetting;
     boolean anHien = false;
     TextView txtNotePalettePreset;
     ImageView imgbottomMain;
-
     SegmentedGroup segmentedGroupSelection, segmentedGrouppalete, segmentedGroupInterval;
     NumberPicker numberPicker;
     TextView txtNotePalete, txtNoteSection, txtPitch, txtTutorial, txtBackApp, txtvolume;
     Typeface typefont;
     JellyToggleButton swvolume;
-
     RadioButton rdbPalete1, rdbPalete2, rdbPalete3, rdbPalete4, rdbPalete5, rdbPalete6, rdbPalete, rdbAutomatic, rdbChomatic;
     RadioButton rdbMainPalete1, rdbMainPalete2, rdbMainPalete3, rdbMainPalete4, rdbMainPalete5, rdbMainPalete6;
     TextView txtPreset;
@@ -89,15 +85,12 @@ public class SettingActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.seting_activity, container, false);
-
-
         rdbPalete1 = view.findViewById(R.id.rdbPalete1);
         rdbPalete2 = view.findViewById(R.id.rdbPalete2);
         rdbPalete3 = view.findViewById(R.id.rdbPalete3);
         rdbPalete4 = view.findViewById(R.id.rdbPalete4);
         rdbPalete5 = view.findViewById(R.id.rdbPalete5);
         rdbPalete6 = view.findViewById(R.id.rdbPalete6);
-
         rdbAutomatic = view.findViewById(R.id.rdbautomatic);
         rdbPalete = view.findViewById(R.id.rdbpalette);
         rdbChomatic = view.findViewById(R.id.rdbchromatic);
@@ -110,8 +103,6 @@ public class SettingActivity extends Fragment {
         rdbMainPalete4 = getActivity().findViewById(R.id.rdbMainPalete4);
         rdbMainPalete5 = getActivity().findViewById(R.id.rdbMainPalete5);
         rdbMainPalete6 = getActivity().findViewById(R.id.rdbMainPalete6);
-
-
         btnmainnext = getActivity().findViewById(R.id.btnnext);
         btnmainNextOctive = getActivity().findViewById(R.id.btnnextx2);
         btnmainPre = getActivity().findViewById(R.id.btnpre);
@@ -134,22 +125,21 @@ public class SettingActivity extends Fragment {
         swvolume = view.findViewById(R.id.tgvolum);
         txtPreset.setText(Bmpreset);
         init();
-
+         conVertNote = new ConVertNote();
 
         // Set Invisible
         INVISIBLE();
         updateSetting();
         readSetttings();
-        setText();
 
         setTextColor(red, gren, blue);
         setNumberPicker();
-
         clickBackapp();
         clickSeggmentControlerSelecte();
         clickSeggmentControlerPalete();
         clickSementControlerInterval();
         loadGameSetting();
+        setText();
         txtPreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,6 +168,15 @@ public class SettingActivity extends Fragment {
         return view;
     }
 
+    void playNote(int note) {
+        AudioSoundPlayer audioSoundPlayer = new AudioSoundPlayer(getActivity());
+        audioSoundPlayer.isNotePlaying(note);
+        audioSoundPlayer.playNote(note);
+        audioSoundPlayer.stopNote(note);
+
+
+    }
+
     public void loadGameSetting() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("helix", Context.MODE_PRIVATE);
         if (sharedPreferences != null) {
@@ -191,6 +190,42 @@ public class SettingActivity extends Fragment {
             segmentedGroupSelection.check(R.id.rdbchromatic);
             // this.segmentedGroupInterval.check(R.id.rdbOctaves);
         }
+
+    }
+    void  setTextPalete1MainAndSetting(String text){
+        rdbPalete1.setText(text);
+
+        rdbMainPalete1.setText(text);
+
+    }
+    void  setTextPalete2MainAndSetting(String text){
+        rdbPalete2.setText(text);
+
+        rdbMainPalete2.setText(text);
+
+    }
+    void  setTextPalete3MainAndSetting(String text){
+        rdbPalete3.setText(text);
+
+        rdbMainPalete3.setText(text);
+
+    }
+    void  setTextPalete4MainAndSetting(String text){
+        rdbPalete4.setText(text);
+
+        rdbMainPalete4.setText(text);
+
+    }
+    void  setTextPalete5MainAndSetting(String text){
+        rdbPalete5.setText(text);
+
+        rdbMainPalete5.setText(text);
+
+    }
+    void  setTextPalete6MainAndSetting(String text){
+        rdbPalete6.setText(text);
+
+        rdbMainPalete6.setText(text);
 
     }
 
@@ -362,11 +397,14 @@ public class SettingActivity extends Fragment {
     }
 
 
+
+
+
     public void updateSetting() {
         HashMap<String, Object> helix1 = new HashMap<String, Object>();
         helix1.clear();
         helix1.put(BMUS_Key_Preset, "Brass Instruments");
-        helix1.put(BMUS_Key_note1, "Bb3");
+        helix1.put(BMUS_Key_note1, "C2");
         helix1.put(BMUS_Key_note2, "Eb4");
         helix1.put(BMUS_Key_note3, "F4");
         helix1.put(BMUS_Key_note4, "Bb4");
@@ -681,7 +719,6 @@ public class SettingActivity extends Fragment {
         helix39.put(BMUS_Key_note6, "none");
 
 
-
         listPreset.add(helix1);
         listPreset.add(helix2);
         listPreset.add(helix3);
@@ -846,108 +883,6 @@ public class SettingActivity extends Fragment {
                 "C6", "C#/Db6", "D6", "D#/Eb6", "E6", "F6", "F#/Gb6", "G6", "G#6/Ab6", "A6", "A#Bb6", "B6",
                 "C7", "C#/Db7", "D7", "D#/Eb7", "E7", "F7", "F#/Gb7", "G7", "G#7/Ab7", "A7", "A#Bb7", "B7",
                 "C8", "C#/Db8", "D8", "D#/Eb8", "E8", "F8", "F#/Gb8", "G8"};
-
-        soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
-        sm = new int[88];
-        sm[0] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong, 10);
-        sm[1] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong1, 1);
-        sm[2] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong2, 1);
-        sm[3] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong3, 1);
-        sm[4] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong4, 1);
-        sm[5] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong5, 1);
-        sm[6] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong6, 1);
-        sm[7] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong7, 1);
-        sm[8] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong8, 1);
-        sm[9] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong9, 1);
-        sm[10] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong10, 1);
-        sm[11] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong11, 1);
-        sm[12] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong12, 1);
-        sm[13] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong13, 1);
-        sm[14] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong14, 1);
-        sm[15] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong15, 1);
-        sm[16] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong16, 1);
-        sm[17] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong18, 1);
-        sm[18] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong1, 1);
-        sm[19] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong2, 1);
-        sm[20] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong3, 1);
-        sm[21] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong4, 1);
-        sm[22] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong5, 1);
-        sm[23] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong5, 1);
-        sm[24] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong7, 1);
-        sm[25] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong8, 1);
-        sm[26] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong9, 1);
-        sm[27] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong10, 1);
-        sm[28] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong11, 1);
-        sm[29] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong12, 1);
-        sm[30] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong13, 1);
-        sm[31] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong14, 1);
-        sm[32] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong15, 1);
-        sm[33] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong16, 1);
-        sm[34] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong18, 1);
-        sm[35] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong, 1);
-        sm[36] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong1, 1);
-        sm[37] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong2, 1);
-        sm[38] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong3, 1);
-        sm[39] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong4, 1);
-        sm[40] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong5, 1);
-        sm[41] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong6, 1);
-        sm[42] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong7, 1);
-        sm[43] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong18, 1);
-        sm[44] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong16, 1);
-        sm[45] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong15, 1);
-        sm[46] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong14, 1);
-        sm[47] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong13, 1);
-        sm[48] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong12, 1);
-        sm[49] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong11, 1);
-        sm[50] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong10, 1);
-        sm[51] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong9, 1);
-        sm[52] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong8, 1);
-        sm[53] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong7, 1);
-        sm[54] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong6, 1);
-        sm[55] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong5, 1);
-        sm[56] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong4, 1);
-        sm[57] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong3, 1);
-        sm[58] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong2, 1);
-        sm[59] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong1, 1);
-        sm[60] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong, 1);
-        sm[61] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong18, 1);
-        sm[62] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong16, 1);
-        sm[63] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong15, 1);
-        sm[64] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong14, 1);
-        sm[65] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong13, 1);
-        sm[66] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong12, 1);
-        sm[67] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong11, 1);
-        sm[68] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong10, 1);
-        sm[69] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong9, 1);
-        sm[70] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong8, 1);
-        sm[71] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong7, 1);
-        sm[72] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong6, 1);
-        sm[73] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong5, 1);
-        sm[74] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong4, 1);
-        sm[75] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong3, 1);
-        sm[76] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong2, 1);
-        sm[77] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong1, 1);
-        sm[78] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong, 1);
-        sm[79] = soundPool.load(getActivity().getApplicationContext(), R.raw.phon17, 1);
-        sm[80] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong10, 1);
-        sm[81] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong11, 1);
-        sm[82] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong15, 1);
-        sm[83] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong13, 1);
-        sm[84] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong16, 1);
-        sm[85] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong15, 1);
-        sm[86] = soundPool.load(getActivity().getApplicationContext(), R.raw.phong, 1);
-
-        // fill your sounds
-
-
-        post1 = sm[number1];
-        post2 = sm[number2];
-        post3 = sm[number3];
-        post4 = sm[number4];
-        post5 = sm[number5];
-        post6 = sm[number6];
-
-
     }
 
     public void setNumberPicker() {
@@ -1038,10 +973,11 @@ public class SettingActivity extends Fragment {
         rdbPalete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[number1], 1, 1, 1, 0, 1f);
-                numberPicker.setValue(number1);
+                int n1 =  conVertNote.convertNameToNote(rdbPalete1.getText().toString());
+                playNote(n1);
 
 
+                numberPicker.setValue(n1);
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @TargetApi(28)
@@ -1050,7 +986,7 @@ public class SettingActivity extends Fragment {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         //    number1 = newVal;
 
-                        post1 = sm[newVal];
+                        note1 = newVal;
                         SlectNumber1 = arrayPicker[newVal];
                         rdbPalete1.setText(SlectNumber1);
                         //SegmentedGroup segmentedGroupMainPlate = getActivity().
@@ -1061,8 +997,10 @@ public class SettingActivity extends Fragment {
                         blue1 = (int) (color.z * 255);
                         gren1 = (int) (color.y * 255);
                         setTextColor(red1, gren1, blue1);
+                        playNote(note1);
+                        setTextPalete1MainAndSetting(SlectNumber1);
                         // lvpreset.setBackgroundColor(Color.rgb(red1,gren1,blue1));
-                        soundPool.play(post1, 1, 1, 1, 0, 1f);
+
                         Log.e("sl", SlectNumber1);
 
 
@@ -1075,14 +1013,16 @@ public class SettingActivity extends Fragment {
         });
     }
 
+
     public void cliclRdbPalete2() {
         rdbPalete2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                numberPicker.setValue(number2);
-
-                soundPool.play(sm[number2], 1, 1, 1, 0, 1f);
+                int n2 = conVertNote.convertNameToNote(rdbPalete2.getText().toString());
+                playNote(n2);
+                numberPicker.setValue(n2);
+                Log.e("n", String.valueOf(n2));
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @TargetApi(28)
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1090,15 +1030,17 @@ public class SettingActivity extends Fragment {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         //number2 = newVal;
                         rdbPalete2.setText(arrayPicker[newVal]);
-                        post2 = sm[newVal];
+                        note2 = newVal;
                         SlectNumber2 = arrayPicker[newVal];
-                        soundPool.play(post2, 1, 1, 1, 0, 1f);
+                        playNote(note2);
                         BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
                         Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(newVal) + 2.0f / 12.0f), 0.2f, 1.0f);
                         red2 = (int) (color.x * 255);
                         blue2 = (int) (color.z * 255);
                         gren2 = (int) (color.y * 255);
                         setTextColor(red2, gren2, blue2);
+                        setTextPalete2MainAndSetting(SlectNumber2);
+
                     }
                 });
 
@@ -1110,8 +1052,10 @@ public class SettingActivity extends Fragment {
         rdbPalete3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                numberPicker.setValue(number3);
-                soundPool.play(sm[number3], 1, 1, 1, 0, 1f);
+                int n3 = conVertNote.convertNameToNote(rdbPalete3.getText().toString());
+                playNote(n3);
+                numberPicker.setValue(n3);
+                Log.e("n", String.valueOf(n3));
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @TargetApi(28)
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1119,7 +1063,7 @@ public class SettingActivity extends Fragment {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         //  number3 = newVal;
                         rdbPalete3.setText(arrayPicker[newVal]);
-                        post3 = sm[newVal];
+                        note3 = newVal;
                         SlectNumber3 = arrayPicker[newVal];
                         BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
                         Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(newVal) + 2.0f / 12.0f), 0.2f, 1.0f);
@@ -1127,7 +1071,8 @@ public class SettingActivity extends Fragment {
                         blue3 = (int) (color.z * 255);
                         gren3 = (int) (color.y * 255);
                         setTextColor(red3, gren3, blue3);
-                        soundPool.play(post3, 1, 1, 1, 0, 1f);
+                        playNote(note3);
+                        setTextPalete3MainAndSetting(SlectNumber3);
                     }
                 });
 
@@ -1139,8 +1084,10 @@ public class SettingActivity extends Fragment {
         rdbPalete4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                numberPicker.setValue(number4);
-                soundPool.play(sm[number4], 1, 1, 1, 0, 1f);
+                int n4 = conVertNote.convertNameToNote(rdbPalete4.getText().toString());
+                playNote(n4);
+                numberPicker.setValue(n4);
+                Log.e("n", String.valueOf(n4));
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @TargetApi(28)
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1148,15 +1095,17 @@ public class SettingActivity extends Fragment {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         //number4 = newVal;
                         rdbPalete4.setText(arrayPicker[newVal]);
-                        post4 = sm[newVal];
+                        note4 = newVal;
                         SlectNumber4 = arrayPicker[newVal];
                         BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
                         Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(newVal) + 2.0f / 12.0f), 0.2f, 1.0f);
                         red4 = (int) (color.x * 255);
                         blue4 = (int) (color.z * 255);
                         gren4 = (int) (color.y * 255);
-                        soundPool.play(post4, 1, 1, 1, 0, 1f);
+                        playNote(note4);
                         setTextColor(red4, gren4, blue4);
+                        setTextPalete4MainAndSetting(SlectNumber4);
+
                     }
                 });
 
@@ -1169,8 +1118,10 @@ public class SettingActivity extends Fragment {
         rdbPalete5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                numberPicker.setValue(number5);
-                soundPool.play(sm[number5], 1, 1, 1, 0, 1f);
+                int n5 = conVertNote.convertNameToNote(rdbPalete5.getText().toString());
+                playNote(n5);
+                numberPicker.setValue(n5);
+                Log.e("n", String.valueOf(n5));
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @TargetApi(28)
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1178,7 +1129,7 @@ public class SettingActivity extends Fragment {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         // number5 = newVal;
 
-                        post5 = sm[newVal];
+                        note5 = newVal;
                         SlectNumber5 = arrayPicker[newVal];
                         rdbPalete5.setText(arrayPicker[newVal]);
                         BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
@@ -1186,8 +1137,9 @@ public class SettingActivity extends Fragment {
                         red5 = (int) (color.x * 255);
                         blue5 = (int) (color.z * 255);
                         gren5 = (int) (color.y * 255);
-                        soundPool.play(post5, 1, 1, 1, 0, 1f);
+                        playNote(note5);
                         setTextColor(red5, gren5, blue5);
+                        setTextPalete5MainAndSetting(SlectNumber5);
                     }
                 });
 
@@ -1202,8 +1154,10 @@ public class SettingActivity extends Fragment {
 
             @Override
             public void onClick(View v) {
-                numberPicker.setValue(number6);
-                soundPool.play(sm[number6], 1, 1, 1, 0, 1f);
+                int n6 = conVertNote.convertNameToNote(rdbPalete6.getText().toString());
+                playNote(n6);
+                numberPicker.setValue(n6);
+                Log.e("n", String.valueOf(n6));
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @TargetApi(28)
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1211,7 +1165,7 @@ public class SettingActivity extends Fragment {
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                         //number6 = newVal;
 
-                        post6 = sm[newVal];
+                        note6 = newVal;
                         SlectNumber6 = arrayPicker[newVal];
                         rdbPalete6.setText(arrayPicker[newVal]);
                         BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
@@ -1220,7 +1174,8 @@ public class SettingActivity extends Fragment {
                         blue6 = (int) (color.z * 255);
                         gren6 = (int) (color.y * 255);
                         setTextColor(red6, gren6, blue6);
-                        soundPool.play(post6, 1, 1, 1, 0, 1f);
+                        playNote(note6);
+                        setTextPalete6MainAndSetting(SlectNumber6);
 
                     }
                 });

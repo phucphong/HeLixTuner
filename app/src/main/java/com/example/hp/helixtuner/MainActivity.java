@@ -1,7 +1,11 @@
 package com.example.hp.helixtuner;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.opengl.GLSurfaceView;
@@ -11,6 +15,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -19,6 +25,7 @@ import android.widget.RadioButton;
 import com.example.hp.helixtuner.OpenGl.MyGLSurfaceView;
 import com.example.hp.helixtuner.Recording.RecodingDroneTuner;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +47,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import android.view.View;
+import android.widget.Toast;
 
 import static com.example.hp.helixtuner.BHSVtoRGB.NoteToHue;
 import static com.example.hp.helixtuner.ValidatePublic.*;
@@ -52,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
-
-    private List<String> files = new ArrayList<>();
+    ConVertNote conVertNote;
     RadioButton rdbMainPalette1, rdbMainPalette2, rdbMainPalette3, rdbMainPalette4, rdbMainPalette5, rdbMainPalette6;
     Button BtnPre, BtnPreX2, BtnNext, BtnNexX2;
     SegmentedGroup segmentedMainGroup;
@@ -62,20 +69,9 @@ public class MainActivity extends AppCompatActivity {
     RadioButton rdbAutomatic, rdbPalette, rdbChromatic;
     // RecyclerView rcvIntrusment;
     ImageView imgBottom, imgtop;
-    static SoundPool soundPool;
-    static int[] sm;
     static AudioManager amg;
-    int note = 24;
-
-
-    String KeymBundle = "KeymBundle";
-
-
-    String keyNote = "intentNote";
-    String keyRed = "red";
-    String keyBlu = "blu";
-    String keyGreen = "Green";
-    String keyIntArrayAudio = "audio";
+    int note = 0;
+    public static final int MAX_VOLUME = 100, CURRENT_VOLUME = 90;
 
     float sampleRate;
 
@@ -87,19 +83,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mGLView = new MyGLSurfaceView(this);
-
-        final ConstraintLayout linerLayout = findViewById(R.id.ctranslayout);
-        linerLayout.addView(mGLView, 0);
+       // final ConstraintLayout linerLayout = findViewById(R.id.ctranslayout);
+       // linerLayout.addView(mGLView, 0);
+        init();
         requestRecordAudioPermission();
         RecodingDroneTuner droneTuner = new RecodingDroneTuner();
         droneTuner.recordAudio();
-        init();
+
         setTextRbgPalette();
         ClickRadio();
         prefManager = new PrefManager(this);
-
+        conVertNote = new ConVertNote();
 
         amg = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         imgBottom.setImageResource(arrGuitar.get(position).getImagebottom());
@@ -135,10 +130,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         BtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changePosition(position + 1);
+                changePosition(note + 1);
+
+                Log.e("note", String.valueOf(note));
+
 
             }
 
@@ -147,54 +146,49 @@ public class MainActivity extends AppCompatActivity {
         BtnNexX2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changePosition(position + chormatic);
+                int p = note + chormatic;
+                Log.e("note", String.valueOf(note));
+                changePosition(p);
+                Log.e("p", String.valueOf(p));
             }
         });
         BtnPre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changePosition(position - 1);
+                changePosition(note - 1);
             }
         });
 
         BtnPreX2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changePosition(position - chormatic);
+                int p = note - chormatic;
+                changePosition(p);
+
             }
         });
 
     }
 
 
-    double convertNoteToFrequency(float note, float octave) {
-        return 440 * Math.pow(2, (note - 69 - octave * 12) / 12.);
-    }
-
-
-    void changeNote() {
-
-
-         soundPool.play(sm[position], 1, 1, 1, 0, 1f);
-            imgBottom.setImageResource(arrGuitar.get(position).getImagebottom());
-            imgtop.setImageResource(arrGuitar.get(position).getImageTop());
+    void playNote(int note) {
+        AudioSoundPlayer audioSoundPlayer = new AudioSoundPlayer(getApplicationContext());
+        audioSoundPlayer.isNotePlaying(note);
+        audioSoundPlayer.playNote(note);
+        audioSoundPlayer.stopNote(note);
+        imgBottom.setImageResource(arrGuitar.get(note).getImagebottom());
+        imgtop.setImageResource(arrGuitar.get(note).getImageTop());
 
 
     }
 
     void changePosition(int p) {
-        stopNote();
-        boolean OutOfRange = p < 0 || p >= sm.length;
+
+        boolean OutOfRange = p < 0 || p >= arrGuitar.size();
         if (!OutOfRange) {
-            position = p;
+            note = p;
         }
-        changeNote();
-    }
-
-    void stopNote()
-    {
-       soundPool.stop(sm[position]);
-
+        playNote(note);
     }
 
 
@@ -255,13 +249,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mGLView.onPause();
+        //  mGLView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mGLView.onResume();
+        //  mGLView.onResume();
 
 
     }
@@ -289,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public native String stringFromJNI();
 
     public void setTextRbgPalette() {
         rdbMainPalette1.setText(BMNote1);
@@ -427,116 +420,6 @@ public class MainActivity extends AppCompatActivity {
         arrGuitar.add(new Guitar("d_8_2x", R.mipmap.d_8_2x, R.mipmap.top_d_));
         arrGuitar.add(new Guitar("e8_2x", R.mipmap.e8_2x, R.mipmap.top_e));
 
-
-        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 1);
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                loaded = true;
-            }
-        });
-
-        sm = new int[88];
-
-
-
-
-        sm[0] = soundPool.load(getApplication(), R.raw.phong, 1);
-        sm[1] = soundPool.load(getApplication(), R.raw.phong1, 1);
-        sm[2] = soundPool.load(getApplication(), R.raw.phong2, 1);
-        sm[3] = soundPool.load(getApplication(), R.raw.phong3, 1);
-        sm[4] = soundPool.load(getApplication(), R.raw.phong4, 1);
-        sm[5] = soundPool.load(getApplication(), R.raw.phong5, 1);
-        sm[6] = soundPool.load(getApplication(), R.raw.phong6, 1);
-        sm[7] = soundPool.load(getApplication(), R.raw.phong7, 1);
-        sm[8] = soundPool.load(getApplication(), R.raw.phong8, 1);
-        sm[9] = soundPool.load(getApplication(), R.raw.phong9, 1);
-        sm[10] = soundPool.load(getApplication(), R.raw.phong10, 1);
-        sm[11] = soundPool.load(getApplication(), R.raw.phong11, 1);
-        sm[12] = soundPool.load(getApplication(), R.raw.phong12, 1);
-        sm[13] = soundPool.load(getApplication(), R.raw.phong13, 1);
-        sm[14] = soundPool.load(getApplication(), R.raw.phong14, 1);
-        sm[15] = soundPool.load(getApplication(), R.raw.phong15, 1);
-        sm[16] = soundPool.load(getApplication(), R.raw.phong16, 1);
-        sm[17] = soundPool.load(getApplication(), R.raw.phong18, 1);
-        sm[18] = soundPool.load(getApplication(), R.raw.phong1, 1);
-        sm[19] = soundPool.load(getApplication(), R.raw.phong2, 1);
-        sm[20] = soundPool.load(getApplication(), R.raw.phong3, 1);
-        sm[21] = soundPool.load(getApplication(), R.raw.phong4, 1);
-        sm[22] = soundPool.load(getApplication(), R.raw.phong5, 1);
-        sm[23] = soundPool.load(getApplication(), R.raw.phong5, 1);
-        sm[24] = soundPool.load(getApplication(), R.raw.phong7, 1);
-        sm[25] = soundPool.load(getApplication(), R.raw.phong8, 1);
-        sm[26] = soundPool.load(getApplication(), R.raw.phong9, 1);
-        sm[27] = soundPool.load(getApplication(), R.raw.phong10, 1);
-        sm[28] = soundPool.load(getApplication(), R.raw.phong11, 1);
-        sm[29] = soundPool.load(getApplication(), R.raw.phong12, 1);
-        sm[30] = soundPool.load(getApplication(), R.raw.phong13, 1);
-        sm[31] = soundPool.load(getApplication(), R.raw.phong14, 1);
-        sm[32] = soundPool.load(getApplication(), R.raw.phong15, 1);
-        sm[33] = soundPool.load(getApplication(), R.raw.phong16, 1);
-        sm[34] = soundPool.load(getApplication(), R.raw.phong18, 1);
-        sm[35] = soundPool.load(getApplication(), R.raw.phong, 1);
-        sm[36] = soundPool.load(getApplication(), R.raw.phong1, 1);
-        sm[37] = soundPool.load(getApplication(), R.raw.phong2, 1);
-        sm[38] = soundPool.load(getApplication(), R.raw.phong3, 1);
-        sm[39] = soundPool.load(getApplication(), R.raw.phong4, 1);
-        sm[40] = soundPool.load(getApplication(), R.raw.phong5, 1);
-        sm[41] = soundPool.load(getApplication(), R.raw.phong6, 1);
-        sm[42] = soundPool.load(getApplication(), R.raw.phong7, 1);
-        sm[43] = soundPool.load(getApplication(), R.raw.phong18, 1);
-        sm[44] = soundPool.load(getApplication(), R.raw.phong16, 1);
-        sm[45] = soundPool.load(getApplication(), R.raw.phong15, 1);
-        sm[46] = soundPool.load(getApplication(), R.raw.phong14, 1);
-        sm[47] = soundPool.load(getApplication(), R.raw.phong13, 1);
-        sm[48] = soundPool.load(getApplication(), R.raw.phong12, 1);
-        sm[49] = soundPool.load(getApplication(), R.raw.phong11, 1);
-        sm[50] = soundPool.load(getApplication(), R.raw.phong10, 1);
-        sm[51] = soundPool.load(getApplication(), R.raw.phong9, 1);
-        sm[52] = soundPool.load(getApplication(), R.raw.phong8, 1);
-        sm[53] = soundPool.load(getApplication(), R.raw.phong7, 1);
-        sm[54] = soundPool.load(getApplication(), R.raw.phong6, 1);
-        sm[55] = soundPool.load(getApplication(), R.raw.phong5, 1);
-        sm[56] = soundPool.load(getApplication(), R.raw.phong4, 1);
-        sm[57] = soundPool.load(getApplication(), R.raw.phong3, 1);
-        sm[58] = soundPool.load(getApplication(), R.raw.phong2, 1);
-        sm[59] = soundPool.load(getApplication(), R.raw.phong1, 1);
-        sm[60] = soundPool.load(getApplication(), R.raw.phong, 1);
-        sm[61] = soundPool.load(getApplication(), R.raw.phong18, 1);
-        sm[62] = soundPool.load(getApplication(), R.raw.phong16, 1);
-        sm[63] = soundPool.load(getApplication(), R.raw.phong15, 1);
-        sm[64] = soundPool.load(getApplication(), R.raw.phong14, 1);
-        sm[65] = soundPool.load(getApplication(), R.raw.phong13, 1);
-        sm[66] = soundPool.load(getApplication(), R.raw.phong12, 1);
-        sm[67] = soundPool.load(getApplication(), R.raw.phong11, 1);
-        sm[68] = soundPool.load(getApplication(), R.raw.phong10, 1);
-        sm[69] = soundPool.load(getApplication(), R.raw.phong9, 1);
-        sm[70] = soundPool.load(getApplication(), R.raw.phong8, 1);
-        sm[71] = soundPool.load(getApplication(), R.raw.phong7, 1);
-        sm[72] = soundPool.load(getApplication(), R.raw.phong6, 1);
-        sm[73] = soundPool.load(getApplication(), R.raw.phong5, 1);
-        sm[74] = soundPool.load(getApplication(), R.raw.phong4, 1);
-        sm[75] = soundPool.load(getApplication(), R.raw.phong3, 1);
-        sm[76] = soundPool.load(getApplication(), R.raw.phong2, 1);
-        sm[77] = soundPool.load(getApplication(), R.raw.phong1, 1);
-        sm[78] = soundPool.load(getApplication(), R.raw.phong, 1);
-        sm[79] = soundPool.load(getApplication(), R.raw.phon17, 1);
-        sm[80] = soundPool.load(getApplication(), R.raw.phong10, 1);
-        sm[81] = soundPool.load(getApplication(), R.raw.phong11, 1);
-        sm[82] = soundPool.load(getApplication(), R.raw.phong15, 1);
-        sm[83] = soundPool.load(getApplication(), R.raw.phong13, 1);
-        sm[84] = soundPool.load(getApplication(), R.raw.phong16, 1);
-        sm[85] = soundPool.load(getApplication(), R.raw.phong15, 1);
-        sm[86] = soundPool.load(getApplication(), R.raw.phong, 1);
-        sm[87] = soundPool.load(getApplication(), R.raw.phong2, 1);
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                loaded = true;
-            }
-        });
-
-
     }
 
 
@@ -545,8 +428,10 @@ public class MainActivity extends AppCompatActivity {
         rdbMainPalette1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[post1], 1, 1, 1, 0, 1f);
-                segmentedMainGroup.setTintColor(Color.rgb(red1, gren1, blue1));
+                int n1 = conVertNote.convertNameToNote(rdbMainPalette1.getText().toString());
+                playNote(n1);
+                Log.e("n", String.valueOf(n1));
+                //  segmentedMainGroup.setTintColor(Color.rgb(red1, gren1, blue1));
 
 
             }
@@ -554,45 +439,54 @@ public class MainActivity extends AppCompatActivity {
         rdbMainPalette2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[post2], 1, 1, 1, 0, 1f);
-                // rdbMainPalette2.setText(SlectNumber2);
-                segmentedMainGroup.setTintColor(Color.rgb(red2, gren2, blue2));
 
+                int n2 = conVertNote.convertNameToNote(rdbMainPalette2.getText().toString());
+                playNote(n2);
+
+                Log.e("n", String.valueOf(n2));
             }
         });
         rdbMainPalette3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[post3], 1, 1, 1, 0, 1f);
-                //rdbMainPalette3.setText(SlectNumber3);
-                segmentedMainGroup.setTintColor(Color.rgb(red3, gren3, blue3));
+
+                int n3 = conVertNote.convertNameToNote(rdbMainPalette3.getText().toString());
+                playNote(n3);
+
+                Log.e("n", String.valueOf(n3));
 
             }
         });
         rdbMainPalette4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[post4], 1, 1, 1, 0, 1f);
-                //rdbMainPalette4.setText(SlectNumber4);
-                segmentedMainGroup.setTintColor(Color.rgb(red4, gren4, blue4));
+
+                int n4 = conVertNote.convertNameToNote(rdbMainPalette4.getText().toString());
+                playNote(n4);
+
+                Log.e("n", String.valueOf(n4));
 
             }
         });
         rdbMainPalette5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[post5], 1, 1, 1, 0, 1f);
-                // rdbMainPalette5.setText(SlectNumber5);
-                segmentedMainGroup.setTintColor(Color.rgb(red5, gren5, blue5));
+
+                int n5 = conVertNote.convertNameToNote(rdbMainPalette5.getText().toString());
+                playNote(n5);
+
+                Log.e("n", String.valueOf(n5));
 
             }
         });
         rdbMainPalette6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPool.play(sm[post6], 1, 1, 1, 0, 1f);
-                // rdbMainPalette6.setText(SlectNumber6);
-                segmentedMainGroup.setTintColor(Color.rgb(red6, gren6, blue6));
+
+                int n6 = conVertNote.convertNameToNote(rdbMainPalette6.getText().toString());
+                playNote(n6);
+
+                Log.e("n", String.valueOf(n6));
 
 
             }

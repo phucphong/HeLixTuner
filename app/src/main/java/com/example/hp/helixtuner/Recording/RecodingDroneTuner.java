@@ -3,6 +3,7 @@ package com.example.hp.helixtuner.Recording;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Process;
 import android.util.Log;
 
 import static com.example.hp.helixtuner.ValidatePublic.*;
@@ -15,7 +16,7 @@ public class RecodingDroneTuner {
             @Override
             public void run() {
                 mShouldContinue = true;
-                android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+                android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
                 // buffer size in bytes
 //                int bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
 //                        AudioFormat.CHANNEL_IN_MONO,

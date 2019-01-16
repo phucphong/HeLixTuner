@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hp.helixtuner">
-    <uses-sdk
-
-    android:minSdkVersion="8"
-
-    android:targetSdkVersion="19" />
-
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -34,5 +30,6 @@
         </activity>
         <activity android:name=".MainActivity"></activity>
     </application>
+
 
 </manifest>
