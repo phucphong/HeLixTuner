@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">HelixTuner</string>
+    <string name="textNextPitch">\></string>
+    <string name="textNextPitchOctive">\>></string>
+
+    <string name="textPrePitch"></string>
+    <string name="textPrePitchOctive"></string>
+
+    <string name="textBachApp">Back to app</string>
+    <string name="textTutorial">Tutorial</string>
+    <string name="textAutomatic">automatic</string>
+    <string name="textPalete">palette</string>
+    <string name="textChomatic">chromatic</string>
+    <string name="textOctive">octaves</string>
+    <string name="textFourths">fourths</string>
+    <string name="textFifths">fifths</string>
+    <string name="textCanel">cancel</string>
+    <string name="textSave">save</string>
+    <string name="textDelete">delete</string>
+    <string name="txtNotePalettePreset">Note palette preset</string>
+    <string name="txtnotesection">Tuning note selection:</string>
 </resources>

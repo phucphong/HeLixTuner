@@ -4,30 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/black"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="#555555"
         android:layout_height="wrap_content"
+        android:background="@color/colorseting"
         android:weightSum="3">
+
         <TextView
             android:id="@+id/txtbackapp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/margin_botton_10dp"
+            android:layout_marginLeft="@dimen/margin_left_10dp"
+            android:layout_marginTop="@dimen/margin_top_10dp"
             android:layout_weight="1"
-           android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
             android:background="@android:color/transparent"
-            android:text="Back to app"
-            android:textColor="#EEEEEE	"
-            android:textSize="18sp"
-            />
+            android:text="@string/textBachApp"
+            android:textColor="@color/colorbackApp"
+            android:textSize="18sp" />
+
         <TextView
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
 
             />
@@ -36,20 +38,17 @@
             android:id="@+id/txttutorial"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_10dp"
+            android:layout_marginBottom="@dimen/margin_botton_10dp"
+            android:layout_marginRight="@dimen/margin_right_10dp"
+            android:layout_marginTop="@dimen/margin_top_10dp"
             android:layout_weight="1"
-            android:layout_margin="10dp"
             android:background="@android:color/transparent"
-            android:text="Tutorial"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-        android:gravity="end"
-            android:layout_marginBottom="10dp"
-            android:textColor="#EEEEEE	"
-            android:textSize="18sp"
-             />
+            android:gravity="end"
+            android:text="@string/textTutorial"
+            android:textColor="@color/colorbackApp"
+            android:textSize="@dimen/text_size_18dp" />
     </LinearLayout>
-
-
 
 
     <ScrollView
@@ -71,8 +70,8 @@
                 android:id="@+id/txtvolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="30dp"
                 android:background="@android:color/transparent"
                 android:text="Boost input volume:"
                 android:textColor="#EEEEEE	"
@@ -83,54 +82,48 @@
             <com.nightonke.jellytogglebutton.JellyToggleButton
                 android:id="@+id/tgvolum"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="132dp"
-                android:layout_marginStart="132dp"
-                android:layout_marginTop="16dp"
-
-
+                android:layout_height="30dp"
+                android:layout_marginLeft="@dimen/margin_left_130dp"
+                android:layout_marginRight="@dimen/margin_right_130dp"
+                android:layout_marginTop="@dimen/margin_top_30dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtvolume" />
 
-            <TextView
-                android:id="@+id/txtpitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="16dp"
-                android:text="Reference pitch A:"
-                android:textColor="#EEEEEE	"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tgvolum" />
+
+
+
+
+
+
 
             <TextView
                 android:id="@+id/txtnotesection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="68dp"
-                android:text="Tuning note selection:"
+                android:layout_marginLeft="@dimen/margin_left_8dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/txtnotesection"
                 android:textColor="#EEEEEE	"
                 android:textSize="18sp"
-
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtpitch" />
+                app:layout_constraintTop_toBottomOf="@+id/tgvolum" />
 
             <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/segmentedSelection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+
+                android:layout_marginRight="@dimen/margin_right_8dp"
+                android:layout_marginLeft="@dimen/margin_left_8dp"
+                android:layout_marginTop="@dimen/margin_top_30dp"
+                android:background="@drawable/custom_text_view"
                 android:orientation="horizontal"
                 android:weightSum="3"
                 segmentedgroup:layout_constraintEnd_toEndOf="parent"
                 segmentedgroup:layout_constraintStart_toStartOf="parent"
                 segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtnotesection"
                 segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_checked_text_color="@color/black"
                 segmentedgroup:sc_corner_radius="5dp">
 
                 <RadioButton
@@ -139,8 +132,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="automatic"
-                    android:textSize="12sp" />
+                    android:text="@string/textAutomatic"
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbpalette"
@@ -148,9 +141,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="palette"
-
-                    android:textSize="12sp" />
+                    android:text="@string/textPalete"
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbchromatic"
@@ -159,17 +151,20 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="chromatic"
-                    android:textSize="12sp" />
+                    android:text="@string/textChomatic"
+                    android:textSize="@dimen/text_size_12dp" />
             </info.hoang8f.android.segmented.SegmentedGroup>
 
             <TextView
                 android:id="@+id/txtnotePalette"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginLeft="@dimen/margin_left_8dp"
+
+                android:layout_marginTop="@dimen/margin_top_30dp"
+                android:background="@drawable/custom_text_preset"
                 android:textColor="#EEEEEE	"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_18dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/segmentedSelection" />
 
@@ -177,15 +172,18 @@
                 android:id="@+id/segmentedPalete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="8dp"
+
+                android:layout_marginLeft="@dimen/margin_left_2dp"
+                android:layout_marginRight="@dimen/margin_right_2dp"
+
+                android:layout_marginTop="@dimen/margin_top_30dp"
                 android:orientation="horizontal"
                 android:weightSum="6"
                 segmentedgroup:layout_constraintEnd_toEndOf="parent"
                 segmentedgroup:layout_constraintStart_toStartOf="parent"
                 segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtnotePalette"
                 segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_checked_text_color="@color/black"
                 segmentedgroup:sc_corner_radius="5dp">
 
                 <RadioButton
@@ -194,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbPalete2"
@@ -202,7 +200,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbPalete3"
@@ -210,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbPalete4"
@@ -218,7 +216,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbPalete5"
@@ -226,7 +224,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <RadioButton
                     android:id="@+id/rdbPalete6"
@@ -234,22 +232,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_12dp" />
             </info.hoang8f.android.segmented.SegmentedGroup>
 
             <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/segmentedInterval"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginLeft="@dimen/margin_left_8dp"
+                android:layout_marginRight="@dimen/margin_left_8dp"
+                android:layout_marginTop="@dimen/margin_top_30dp"
                 android:orientation="horizontal"
                 android:weightSum="3"
                 segmentedgroup:layout_constraintEnd_toEndOf="parent"
                 segmentedgroup:layout_constraintStart_toStartOf="parent"
                 segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtnotePalette"
                 segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_checked_text_color="@color/black"
                 segmentedgroup:sc_corner_radius="5dp">
 
                 <RadioButton
@@ -258,8 +257,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="octaves"
-                    android:textSize="15sp" />
+                    android:text="@string/textOctive"
+                    android:textSize="@dimen/text_size_12dp"  />
 
                 <RadioButton
                     android:id="@+id/rdbFourths"
@@ -267,8 +266,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="fourths"
-                    android:textSize="15sp" />
+                    android:text="@string/textFourths"
+                    android:textSize="@dimen/text_size_12dp"  />
 
                 <RadioButton
                     android:id="@+id/rdbFifths"
@@ -276,52 +275,66 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="fifths"
-                    android:textSize="15sp" />
+                    android:text="@string/textFifths"
+                    android:textSize="@dimen/text_size_12dp"  />
             </info.hoang8f.android.segmented.SegmentedGroup>
 
             <NumberPicker
                 android:id="@+id/numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="128dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_numberpicker"
 
-                android:background="@color/black"
+
                 android:backgroundTint="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/segmentedPalete"
                 tools:ignore="MissingConstraints"></NumberPicker>
 
+
             <TextView
                 android:id="@+id/txtNotePalettePreset"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_right_8dp"
 
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="140dp"
-                android:text="Note palette preset"
+                android:layout_marginLeft="@dimen/margin_left_8dp"
+                android:layout_marginTop="@dimen/margin_top_30dp"
+                android:text="@string/txtNotePalettePreset"
 
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.037"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/segmentedPalete" />
+                app:layout_constraintTop_toBottomOf="@+id/numberpicker" />
 
-            <TextView
-                android:id="@+id/txtPreset"
+
+            <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/segmentedPreset"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="60dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="48dp"
-                android:gravity="center"
-                android:text="Preset"
-                android:textSize="15sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtNotePalettePreset" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_left_80dp"
+                android:layout_marginRight="@dimen/margin_right_80dp"
+                android:layout_marginTop="@dimen/margin_top_30dp"
+                android:orientation="horizontal"
 
+
+                segmentedgroup:layout_constraintEnd_toEndOf="parent"
+                segmentedgroup:layout_constraintStart_toStartOf="parent"
+                segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtNotePalettePreset"
+                segmentedgroup:sc_border_width="1dp"
+                segmentedgroup:sc_checked_text_color="@color/black"
+                segmentedgroup:sc_corner_radius="10dp">
+
+                <RadioButton
+                    android:id="@+id/rdbPreset"
+                    style="@style/RadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:textSize="12sp" />
+
+            </info.hoang8f.android.segmented.SegmentedGroup>
 
         </android.support.constraint.ConstraintLayout>
 

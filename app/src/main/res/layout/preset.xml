@@ -8,16 +8,16 @@
 
     <ListView
         android:id="@+id/lvPreset"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:layout_marginBottom="40dp" />
+        android:layout_marginBottom="40dp"
+     />
 
     <LinearLayout
         android:id="@+id/layoutPreset"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="cancel" />
+            android:text="@string/textCanel" />
 
         <TextView
             android:id="@+id/txtsavePre"
@@ -48,15 +48,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="save" />
+            android:text="@string/textSave" />
 
         <TextView
             android:id="@+id/txtdeletePre"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_weight="1"
-            android:text="delete" />
+            android:gravity="center"
+            android:text="@string/textDelete" />
 
     </LinearLayout>
 

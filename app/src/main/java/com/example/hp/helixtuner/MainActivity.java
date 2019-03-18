@@ -1,40 +1,32 @@
 package com.example.hp.helixtuner;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.media.AudioFormat;
+
+import android.content.SharedPreferences;
+
 import android.media.AudioManager;
-import android.media.AudioTrack;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
+
 import android.opengl.GLSurfaceView;
 import android.support.constraint.ConstraintLayout;
+
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseArray;
-import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
-
 
 import com.example.hp.helixtuner.OpenGl.MyGLSurfaceView;
 import com.example.hp.helixtuner.Recording.RecodingDroneTuner;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import info.hoang8f.android.segmented.SegmentedGroup;
-
 
 import android.Manifest;
-
-
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 
@@ -47,7 +39,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
+
+
+import info.hoang8f.android.segmented.SegmentedGroup;
 
 import static com.example.hp.helixtuner.BHSVtoRGB.NoteToHue;
 import static com.example.hp.helixtuner.ValidatePublic.*;
@@ -60,20 +55,26 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+    SharedPreferences.Editor editor;
     ConVertNote conVertNote;
     RadioButton rdbMainPalette1, rdbMainPalette2, rdbMainPalette3, rdbMainPalette4, rdbMainPalette5, rdbMainPalette6;
-    Button BtnPre, BtnPreX2, BtnNext, BtnNexX2;
-    SegmentedGroup segmentedMainGroup;
-    private boolean loaded = false;
-    PrefManager prefManager;
+    SegmentedGroup segmentedMainGroup, segmentedGroupSelection;
+    SharedPreferences sharedPreferences;
     RadioButton rdbAutomatic, rdbPalette, rdbChromatic;
     // RecyclerView rcvIntrusment;
     ImageView imgBottom, imgtop;
+    int[] listImageTop = new int[12];
     static AudioManager amg;
     int note = 0;
-    public static final int MAX_VOLUME = 100, CURRENT_VOLUME = 90;
-
+    Button btnmainPre, btnmainPreOctive, btnmainnext, btnmainNextOctive;
     float sampleRate;
+
+    TextView txtNotePalettePreset;
+    TextView txtvolume;
+    RadioButton rdbMainPalete1, rdbMainPalete2, rdbMainPalete3, rdbMainPalete4, rdbMainPalete5, rdbMainPalete6, rdbpreset;
+    TextView txtPreset;
+    ListView lvpreset;
+
 
     private GLSurfaceView mGLView;
 
@@ -82,40 +83,107 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        final ConstraintLayout constraintLayout = findViewById(R.id.ctranslayout);
         mGLView = new MyGLSurfaceView(this);
-       // final ConstraintLayout linerLayout = findViewById(R.id.ctranslayout);
-       // linerLayout.addView(mGLView, 0);
-        init();
-        requestRecordAudioPermission();
-        RecodingDroneTuner droneTuner = new RecodingDroneTuner();
-        droneTuner.recordAudio();
-
-        setTextRbgPalette();
-        ClickRadio();
-        prefManager = new PrefManager(this);
+        constraintLayout.addView(mGLView, 0);
         conVertNote = new ConVertNote();
+        sharedPreferences = getSharedPreferences("helix", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
+        init();
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatColor() {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(sharedPreferences.getInt("note", note)) + 2.0f / 12.0f), 0.45f, 1.0f);
+
+        red = (int) (color.x * 255);
+        green = (int) (color.y * 255);
+        blue = (int) (color.z * 255);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatTitleColor() {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(sharedPreferences.getInt("note", note)) + 2.0f / 12.0f), 0.2f, 1.0f);
+
+        redTitle = (int) (color.x * 255);
+        greenTitle = (int) (color.y * 255);
+        blueTitle = (int) (color.z * 255);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    void getSamplerate() {
         amg = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        imgBottom.setImageResource(arrGuitar.get(position).getImagebottom());
-        imgtop.setImageResource(arrGuitar.get(position).getImageTop());
         final AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         String samplerate = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
         sampleRate = Float.parseFloat(samplerate);
-        Log.e("posttiotn", String.valueOf(position));
-        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
-        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(position) + 2.0f / 12.0f), 0.2f, 1.0f);
+        Log.e("posttiotn", String.valueOf(note));
+    }
 
-        red = (int) (color.x * 255);
-        gren = (int) (color.y * 255);
-        blue = (int) (color.z * 255);
-        rdbAutomatic = findViewById(R.id.rdbautomatic);
-        rdbPalette = findViewById(R.id.rdbpalette);
-        rdbChromatic = findViewById(R.id.rdbchromatic);
+    void setimageTopBottom(String keynote) {
+        imgBottom.setImageResource(arrGuitar.get(sharedPreferences.getInt(keynote, 0)).getImagebottom());
+        imgtop.setImageResource(arrGuitar.get(sharedPreferences.getInt(keynote, 0)).getImageTop());
+    }
 
-        segmentedMainGroup.setVisibility(View.INVISIBLE);
-        segmentedMainGroup.setTintColor(Color.rgb(red, gren, blue));
+    void playBtnNext() {
+        btnmainnext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int noteoctive = note + 1;
+                editor.putInt("noteoctive", noteoctive);
+                editor.commit();
+                changePosition(sharedPreferences.getInt("noteoctive", 0));
+                setimageTopBottom("noteoctive");
+                Log.e("note", String.valueOf(noteoctive));
+            }
 
+
+        });
+    }
+
+    void playBtnNectOctive() {
+        btnmainNextOctive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                note = note + 1;
+                editor.putInt("note", note);
+                editor.commit();
+                changePosition(sharedPreferences.getInt("note", note));
+                Log.e("notenextOctive", String.valueOf(note));
+                changePosition(note);
+
+            }
+        });
+    }
+
+    void playBtnPre() {
+        btnmainPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int notepre = sharedPreferences.getInt("note", 0) - 1;
+                changePosition(notepre);
+            }
+        });
+    }
+
+    void playBtnPreOctive() {
+        btnmainPreOctive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int notepre2 = sharedPreferences.getInt("note", 0) - sharedPreferences.getInt("chomatic", 0);
+                changePosition(notepre2);
+
+            }
+        });
+
+    }
+
+    void clickimagetop() {
 
         imgtop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,63 +191,29 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 SettingActivity settingActivity = new SettingActivity();
-                fragmentTransaction.add(R.id.contentView, settingActivity);
+                fragmentTransaction.add(R.id.contentView, settingActivity, "settingActivity");
+
                 fragmentTransaction.addToBackStack("settingActivity");
+
                 fragmentTransaction.commit();
 
 
             }
         });
-
-        BtnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changePosition(note + 1);
-
-                Log.e("note", String.valueOf(note));
-
-
-            }
-
-
-        });
-        BtnNexX2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int p = note + chormatic;
-                Log.e("note", String.valueOf(note));
-                changePosition(p);
-                Log.e("p", String.valueOf(p));
-            }
-        });
-        BtnPre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changePosition(note - 1);
-            }
-        });
-
-        BtnPreX2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int p = note - chormatic;
-                changePosition(p);
-
-            }
-        });
-
     }
-
 
     void playNote(int note) {
         AudioSoundPlayer audioSoundPlayer = new AudioSoundPlayer(getApplicationContext());
         audioSoundPlayer.isNotePlaying(note);
         audioSoundPlayer.playNote(note);
         audioSoundPlayer.stopNote(note);
+
+
+    }
+
+    void setimage(int note) {
         imgBottom.setImageResource(arrGuitar.get(note).getImagebottom());
         imgtop.setImageResource(arrGuitar.get(note).getImageTop());
-
-
     }
 
     void changePosition(int p) {
@@ -189,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
             note = p;
         }
         playNote(note);
+        setimage(note);
     }
 
 
@@ -245,17 +280,58 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setimageTopBottom("noteoctive");
+        conVertNote = new ConVertNote();
+        getSamplerate();
+        clickimagetop();
+        floatTitleColor();
+        floatColor();
+        playBtnNext();
+        playBtnNectOctive();
+        playBtnPre();
+        playBtnPreOctive();
+        ClickPaleteMain();
+        requestRecordAudioPermission();
+        RecodingDroneTuner droneTuner = new RecodingDroneTuner();
+        droneTuner.recordAudio();
+        segmentedMainGroup.setVisibility(sharedPreferences.getInt("invisible", View.INVISIBLE));
+        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
+
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //  mGLView.onPause();
+
+        mGLView.onPause();
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //  mGLView.onResume();
+
+        mGLView.onResume();
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
 
     }
@@ -283,29 +359,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    public void setTextRbgPalette() {
-        rdbMainPalette1.setText(BMNote1);
-        rdbMainPalette2.setText(BMNote2);
-        rdbMainPalette3.setText(BMNote3);
-        rdbMainPalette4.setText(BMNote4);
-        rdbMainPalette5.setText(BMNote5);
-        rdbMainPalette6.setText(BMNote6);
-
-
-    }
-
-
     public void init() {
+        listImageTop[0] = R.mipmap.top_c;
+        listImageTop[1] = R.mipmap.top_c_;
+        listImageTop[2] = R.mipmap.top_d;
+        listImageTop[3] = R.mipmap.top_d_;
+        listImageTop[4] = R.mipmap.top_e;
+        listImageTop[5] = R.mipmap.top_f;
+        listImageTop[6] = R.mipmap.top_f_;
+        listImageTop[7] = R.mipmap.top_g;
+        listImageTop[8] = R.mipmap.top_g_;
+        listImageTop[9] = R.mipmap.top_a;
+        listImageTop[10] = R.mipmap.top_a_;
+        listImageTop[11] = R.mipmap.top_b;
+        rdbAutomatic = findViewById(R.id.rdbautomatic);
+        rdbPalette = findViewById(R.id.rdbpalette);
+        rdbChromatic = findViewById(R.id.rdbchromatic);
 
-        BtnPre = findViewById(R.id.btnpre);
-        BtnPreX2 = findViewById(R.id.btnprex2);
-        BtnNext = findViewById(R.id.btnnext);
-        BtnNexX2 = findViewById(R.id.btnnextx2);
+        btnmainnext = findViewById(R.id.btnnext);
+        btnmainNextOctive = findViewById(R.id.btnnextx2);
+        btnmainPre = findViewById(R.id.btnpre);
+        btnmainPreOctive = findViewById(R.id.btnprex2);
+        segmentedGroupSelection = findViewById(R.id.segmentedSelection);
+
+        lvpreset = findViewById(R.id.lvPreset);
         imgBottom = findViewById(R.id.imgbottom);
         imgtop = findViewById(R.id.imgtop);
-
-
+        rdbpreset = findViewById(R.id.rdbPreset);
+        txtNotePalettePreset = findViewById(R.id.txtNotePalettePreset);
         segmentedMainGroup = findViewById(R.id.segmentedMainPalete);
 
         rdbMainPalette1 = findViewById(R.id.rdbMainPalete1);
@@ -422,71 +503,140 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    void floatColor(String keyred, String keygreen, String keyblue) {
+        int red = sharedPreferences.getInt(keyred, 1);
 
-    public void ClickRadio() {
+        int green = sharedPreferences.getInt(keygreen, 1);
+        int blue = sharedPreferences.getInt(keyblue, 1);
+        Log.e("red", String.valueOf(red));
+        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void setTintcolorPalette(float note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.45f, 1.0f);
+
+        red = (int) (color.x * 255);
+        green = (int) (color.y * 255);
+        blue = (int) (color.z * 255);
+        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
+
+    }
+
+    void setColorTop(int a) {
+        imgtop.setImageResource(listImageTop[a]);
+
+    }
+
+
+    public void ClickPaleteMain() {
 
         rdbMainPalette1.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                int n1 = conVertNote.convertNameToNote(rdbMainPalette1.getText().toString());
-                playNote(n1);
-                Log.e("n", String.valueOf(n1));
-                //  segmentedMainGroup.setTintColor(Color.rgb(red1, gren1, blue1));
+                String text = rdbMainPalette1.getText().toString();
+                final int n1 = conVertNote.getNoteByName(text);
+                int color = conVertNote.getNoteByNameColorTop(text);
+                float color1 = (float) color;
+                if (n1 == -1) {
 
 
+                } else {
+                    playNote(n1);
+                    setColorTop(color);
+                    setTintcolorPalette(color1);
+
+
+                }
             }
         });
         rdbMainPalette2.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                String text = rdbMainPalette2.getText().toString();
+                final int n2 = conVertNote.getNoteByName(text);
+                int color = conVertNote.getNoteByNameColorTop(text);
+                float color2 = (float) color;
+                if (n2 == -1) {
+                } else {
+                    playNote(n2);
+                    setColorTop(color);
+                    setTintcolorPalette(color2);
 
-                int n2 = conVertNote.convertNameToNote(rdbMainPalette2.getText().toString());
-                playNote(n2);
-
-                Log.e("n", String.valueOf(n2));
+                }
             }
         });
         rdbMainPalette3.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-
-                int n3 = conVertNote.convertNameToNote(rdbMainPalette3.getText().toString());
-                playNote(n3);
-
-                Log.e("n", String.valueOf(n3));
-
+                String text = rdbMainPalette3.getText().toString();
+                final int n3 = conVertNote.getNoteByName(text);
+                int color = conVertNote.getNoteByNameColorTop(text);
+                float color3 = (float) color;
+                if (n3 == -1) {
+                } else {
+                    playNote(n3);
+                    setColorTop(color);
+                    setTintcolorPalette(color3);
+                }
             }
         });
         rdbMainPalette4.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-
-                int n4 = conVertNote.convertNameToNote(rdbMainPalette4.getText().toString());
-                playNote(n4);
-
-                Log.e("n", String.valueOf(n4));
-
+                String text = rdbMainPalette4.getText().toString();
+                final int n4 = conVertNote.getNoteByName(text);
+                int color = conVertNote.getNoteByNameColorTop(text);
+                float color4 = (float) color;
+                if (n4 == -1) {
+                } else {
+                    playNote(n4);
+                    setColorTop(color);
+                    setTintcolorPalette(color4);
+                }
             }
         });
         rdbMainPalette5.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
 
-                int n5 = conVertNote.convertNameToNote(rdbMainPalette5.getText().toString());
-                playNote(n5);
+                String text = rdbMainPalette5.getText().toString();
+                final int n5 = conVertNote.getNoteByName(text);
+                int color = conVertNote.getNoteByNameColorTop(text);
+                float color5 = (float) color;
+                if (n5 == -1) {
+                } else {
+                    playNote(n5);
+                    setColorTop(color);
+                    setTintcolorPalette(color5);
+                }
 
-                Log.e("n", String.valueOf(n5));
 
             }
         });
         rdbMainPalette6.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
 
-                int n6 = conVertNote.convertNameToNote(rdbMainPalette6.getText().toString());
-                playNote(n6);
+                String text = rdbMainPalette6.getText().toString();
+                final int n6 = conVertNote.getNoteByName(text);
+                int color = conVertNote.getNoteByNameColorTop(text);
+                float color6 = (float) color;
 
-                Log.e("n", String.valueOf(n6));
+                if (n6 == -1) {
+                } else {
+                    playNote(n6);
+                    setColorTop(color);
+                    setTintcolorPalette(color6);
+
+                }
 
 
             }

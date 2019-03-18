@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="#DDDDDD"
-    app:layout_constraintCircleRadius="@dimen/radio_button_conner_radius">
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_text_view"
+    android:backgroundTint="#DDDDDD"
 
+  >
     <TextView
-        android:id="@+id/txtcanceinput"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="156dp"
-        android:layout_weight="1"
-        android:text="Cance"
-        android:textColor="#0000EE"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginEnd="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="28dp"
+     android:layout_gravity="center"
+        android:text="HelixTuner"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        />
 
     <EditText
         android:id="@+id/edtInput"
@@ -28,29 +31,63 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="72dp"
-        android:layout_weight="1"
-        android:background="#EEEEEE"
-        android:ems="10"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+
+        android:background="@drawable/custom_text_preset"
+        android:backgroundTint="#EEEEEE"
+        android:paddingLeft="10dp"
+        android:textSize="12sp"
+
         android:hint="Please input a name here..."
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:inputType="text"
+
+
         app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="2"
+        >
 
-    <TextView
-        android:id="@+id/txtdone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="156dp"
-        android:text="Done"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/txtcanceinput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Cance"
+            android:textSize="15dp"
+            android:textColor="#0000EE"
+            />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:id="@+id/txtdone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Done"
+            />
+
+    </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+
+
+
+
+</LinearLayout>

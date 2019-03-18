@@ -3,7 +3,7 @@ package com.example.hp.helixtuner;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import info.hoang8f.android.segmented.SegmentedGroup;
+
 
 public class PrefManager {
     SharedPreferences pref;

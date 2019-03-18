@@ -13,17 +13,17 @@ public class Circle {
     private int mProgram, mPositionHandle, mColorHandle, mMVPMatrixHandle;
     private FloatBuffer mVertexBuffer;
     private FloatBuffer colorBuffer;
-
-//    float radius = 0.6f;
+    int vertexShader;
+    int fragmentShader;
+    //    float radius = 0.6f;
 //    int Stride_2D =2;
 //    int spp =500;
 //    float circleBuffers[] = new float[spp*2];
-    private int circleSize = 364;
-        ;//   poitn
+    private int circleSize = 361;
+    ;//   poitn
     private int verticeSize = circleSize * 2;// gllineS noi 2 diem gan nhau
     private float vertices[] = new float[verticeSize * 6];// 1 poitn co x,y,z
-    float color[] = {1.0f, 0.0f, 0.0f, 1.0f, // Red (NEW)
-            0.0f, 1.0f, 0.0f, 1.0f, // Green (NEW)
+    float color[] = {
             0.0f, 0.0f, 1.0f, 1.0f}; // Blue (NEW)};
     private final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
@@ -40,6 +40,49 @@ public class Circle {
                     "}";
 
     public Circle() {
+        int jdem = 1;
+        for (int i = 0; i < verticeSize; i++) {
+            vertices[(i * 6) + 0] = (float) (0.5 * Math.cos(jdem * ((Math.PI / 180))) * (0.7 + circleBuffers[i]));
+            vertices[(i * 6) + 1] = (float) (0.5 * Math.sin(jdem * ((Math.PI / 180))) * (0.7 + circleBuffers[i]));
+            vertices[(i * 6) + 2] = 0.0f;
+
+            vertices[(i * 6) + 3] = (float) (0.5 * Math.cos(jdem * ((Math.PI / 180))) * (0.7 + circleBuffers[i + 1]));
+            vertices[(i * 6) + 4] = (float) (0.5 * Math.sin(jdem * ((Math.PI / 180))) * (0.7 + circleBuffers[i + 1]));
+            vertices[(i * 6) + 5] = 0.0f;
+            jdem += 1;
+
+
+        }
+        int mbyteonfloat = 4;
+        // initialize vertex byte buffer for shape coordinates
+        ByteBuffer vertexByteBuffer = ByteBuffer.allocateDirect((vertices.length) * mbyteonfloat);
+        // use the device hardware's native byte order
+        vertexByteBuffer.order(ByteOrder.nativeOrder());
+        // create a floating point buffer from the ByteBuffer
+        mVertexBuffer = vertexByteBuffer.asFloatBuffer();
+        // add the coordinates to the FloatBuffer
+        mVertexBuffer.put(vertices);
+        // set the buffer to read the first coordinate
+        mVertexBuffer.position(0);
+
+        vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        mProgram = GLES20.glCreateProgram();
+
+
+
+        // create empty OpenGL ES Program
+        //  mProgram=GLES20.g
+        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
+        GLES20.glLinkProgram(mProgram);
+
+
+
+
+
+
+
 
     }
 
@@ -64,41 +107,6 @@ public class Circle {
 
 
     public void draw(float[] mvpMatrix) {
-        int jdem = 1;
-        for (int i = 0; i < verticeSize; i++) {
-            vertices[(i * 6) + 0] = (float) (0.5 * Math.cos(jdem * ((Math.PI / 180)))*(0.7+circleBuffers[i]) );
-            vertices[(i * 6) + 1] = (float) (0.5 * Math.sin(jdem * ((Math.PI / 180)))*(0.7+circleBuffers[i]) );
-            vertices[(i * 6) + 2] = 0.0f;
-
-            vertices[(i * 6) + 3] = (float) (0.5 * Math.cos(jdem * ((Math.PI / 180)))*(0.7+circleBuffers[i+1])  );
-            vertices[(i * 6) + 4] = (float) (0.5 * Math.sin(jdem * ((Math.PI / 180)))*(0.7+circleBuffers[i+1]));
-            vertices[(i * 6) + 5] = 0.0f;
-            jdem += 1;
-
-
-        }
-
-        //Log.e("bien", String.valueOf(radius));
-        //   Log.e("Thread", "(" + vertices[0] + ", " + vertices[1] + ")    -    (" + vertices[3] + ", " + vertices[4] + ")");
-        int mbyteonfloat = 4;
-        // initialize vertex byte buffer for shape coordinates
-        ByteBuffer vertexByteBuffer = ByteBuffer.allocateDirect((vertices.length) * mbyteonfloat);
-        // use the device hardware's native byte order
-        vertexByteBuffer.order(ByteOrder.nativeOrder());
-        // create a floating point buffer from the ByteBuffer
-        mVertexBuffer = vertexByteBuffer.asFloatBuffer();
-        // add the coordinates to the FloatBuffer
-        mVertexBuffer.put(vertices);
-        // set the buffer to read the first coordinate
-        mVertexBuffer.position(0);
-        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
-
-        mProgram = GLES20.glCreateProgram();             // create empty OpenGL ES Program
-        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
-        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
-        GLES20.glLinkProgram(mProgram);
-
 
         GLES20.glUseProgram(mProgram);
 

@@ -5,8 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black">#000000</color>
+
+    <color name="colorseting">#222222</color>
+    <color name="colorbackApp">#EEEEEE</color>
     <color name="green">#4CAF50</color>
     <color name="orange">#FF9800</color>
+    <color name="textcolorPitch">#EEEEEE</color>
+
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#d1395c</color>
     <color name="dot_dark_screen2">#14a895</color>
