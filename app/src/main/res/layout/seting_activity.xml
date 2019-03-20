@@ -307,34 +307,41 @@
                 app:layout_constraintHorizontal_bias="0.037"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/numberpicker" />
-
-
             <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/segmentedPreset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_left_80dp"
-                android:layout_marginRight="@dimen/margin_right_80dp"
+                android:layout_marginRight="@dimen/margin_left_80dp"
                 android:layout_marginTop="@dimen/margin_top_30dp"
                 android:orientation="horizontal"
-
-
+                android:weightSum="1"
+                android:checkedButton="@id/rdbPreset"
                 segmentedgroup:layout_constraintEnd_toEndOf="parent"
                 segmentedgroup:layout_constraintStart_toStartOf="parent"
                 segmentedgroup:layout_constraintTop_toBottomOf="@+id/txtNotePalettePreset"
                 segmentedgroup:sc_border_width="1dp"
                 segmentedgroup:sc_checked_text_color="@color/black"
-                segmentedgroup:sc_corner_radius="10dp">
+                segmentedgroup:sc_corner_radius="5dp">
 
                 <RadioButton
                     android:id="@+id/rdbPreset"
                     style="@style/RadioButton"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:checked="true"
-                    android:textSize="12sp" />
+                    android:text="@string/textOctive"
+                    android:textSize="@dimen/text_size_12dp"  />
+
+
+
+
 
             </info.hoang8f.android.segmented.SegmentedGroup>
+
+
+
 
         </android.support.constraint.ConstraintLayout>
 

@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.SparseArray;
 
+import static com.example.hp.helixtuner.ValidatePublic.*;
 import java.io.InputStream;
 
 /**
@@ -157,7 +158,7 @@ public class AudioSoundPlayer {
                 int bufferSize = 4096;
                 byte[] buffer = new byte[bufferSize];
 
-                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE, AudioFormat.CHANNEL_CONFIGURATION_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
 
                 float logVolume = (float) (1 - (Math.log(MAX_VOLUME - CURRENT_VOLUME) / Math.log(MAX_VOLUME)));

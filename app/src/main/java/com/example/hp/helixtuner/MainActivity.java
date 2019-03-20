@@ -25,22 +25,16 @@ import android.widget.RadioButton;
 import com.example.hp.helixtuner.OpenGl.MyGLSurfaceView;
 import com.example.hp.helixtuner.Recording.RecodingDroneTuner;
 
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-
 import android.os.Build;
 import android.renderscript.Float3;
-
 import android.support.annotation.RequiresApi;
-
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-
 import android.view.View;
 import android.widget.TextView;
-
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
@@ -65,15 +59,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgBottom, imgtop;
     int[] listImageTop = new int[12];
     static AudioManager amg;
-    int note = 0;
     Button btnmainPre, btnmainPreOctive, btnmainnext, btnmainNextOctive;
-    float sampleRate;
-
     TextView txtNotePalettePreset;
     TextView txtvolume;
     RadioButton rdbMainPalete1, rdbMainPalete2, rdbMainPalete3, rdbMainPalete4, rdbMainPalete5, rdbMainPalete6, rdbpreset;
-    TextView txtPreset;
-    ListView lvpreset;
 
 
     private GLSurfaceView mGLView;
@@ -91,73 +80,46 @@ public class MainActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         init();
+        String a = conVertNote.getImgNameByNote(startnote);
+        newnote = conVertNote.getNoteByNameColorTop(a);
+        Log.e("newnote", String.valueOf(newnote));
 
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void floatColor() {
+    void floatColor(int note) {
         BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
-        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(sharedPreferences.getInt("note", note)) + 2.0f / 12.0f), 0.45f, 1.0f);
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.45f, 1.0f);
 
         red = (int) (color.x * 255);
         green = (int) (color.y * 255);
         blue = (int) (color.z * 255);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    void floatTitleColor() {
-        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
-        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(sharedPreferences.getInt("note", note)) + 2.0f / 12.0f), 0.2f, 1.0f);
-
-        redTitle = (int) (color.x * 255);
-        greenTitle = (int) (color.y * 255);
-        blueTitle = (int) (color.z * 255);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    void getSamplerate() {
-        amg = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        final AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        String samplerate = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-        sampleRate = Float.parseFloat(samplerate);
-        Log.e("posttiotn", String.valueOf(note));
-    }
-
-    void setimageTopBottom(String keynote) {
-        imgBottom.setImageResource(arrGuitar.get(sharedPreferences.getInt(keynote, 0)).getImagebottom());
-        imgtop.setImageResource(arrGuitar.get(sharedPreferences.getInt(keynote, 0)).getImageTop());
+    void setimageTopBottom(int keynote) {
+        imgBottom.setImageResource(arrGuitar.get(keynote).getImagebottom());
+        imgtop.setImageResource(arrGuitar.get(keynote).getImageTop());
     }
 
     void playBtnNext() {
         btnmainnext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int noteoctive = note + 1;
-                editor.putInt("noteoctive", noteoctive);
-                editor.commit();
-                changePosition(sharedPreferences.getInt("noteoctive", 0));
-                setimageTopBottom("noteoctive");
-                Log.e("note", String.valueOf(noteoctive));
-            }
+                startnote = startnote + 1;
 
 
-        });
-    }
-
-    void playBtnNectOctive() {
-        btnmainNextOctive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                note = note + 1;
-                editor.putInt("note", note);
-                editor.commit();
-                changePosition(sharedPreferences.getInt("note", note));
-                Log.e("notenextOctive", String.valueOf(note));
-                changePosition(note);
+                changePosition(startnote);
+                setimageTopBottom(startnote);
+                // convet note snag FullString
+                String a = conVertNote.getImgNameByNote(startnote);
+                newnote = conVertNote.getNoteByNameColorTop(a);
+                Log.e("newnote", String.valueOf(newnote));
+                imgtop.setImageResource(listImageTop[newnote]);
 
             }
+
+
         });
     }
 
@@ -165,8 +127,15 @@ public class MainActivity extends AppCompatActivity {
         btnmainPre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int notepre = sharedPreferences.getInt("note", 0) - 1;
-                changePosition(notepre);
+                startnote = startnote - 1;
+                changePosition(startnote);
+                String a = conVertNote.getImgNameByNote(startnote);
+
+                changePosition(startnote);
+                newnote = conVertNote.getNoteByNameColorTop(a);
+                Log.e("newnotePre", String.valueOf(newnote));
+                imgtop.setImageResource(listImageTop[newnote]);
+
             }
         });
     }
@@ -175,13 +144,37 @@ public class MainActivity extends AppCompatActivity {
         btnmainPreOctive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int notepre2 = sharedPreferences.getInt("note", 0) - sharedPreferences.getInt("chomatic", 0);
-                changePosition(notepre2);
+                startnote = startnote - 12;
+                changePosition(startnote);
+                String a = conVertNote.getImgNameByNote(startnote);
+                newnote = conVertNote.getNoteByNameColorTop(a);
+                Log.e("chomaticnext", String.valueOf(chormatic));
+                imgtop.setImageResource(listImageTop[newnote]);
 
             }
         });
 
     }
+
+    void playBtnNectOctive() {
+        btnmainNextOctive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startnote = startnote + 12;
+                String a = conVertNote.getImgNameByNote(startnote);
+                changePosition(startnote);
+                Log.e("notenextOctive", String.valueOf(startnote));
+                changePosition(startnote);
+                newnote = conVertNote.getNoteByNameColorTop(a);
+                Log.e("chomaticPre", String.valueOf(chormatic));
+                imgtop.setImageResource(listImageTop[newnote]);
+
+
+            }
+        });
+    }
+
 
     void clickimagetop() {
 
@@ -213,19 +206,163 @@ public class MainActivity extends AppCompatActivity {
 
     void setimage(int note) {
         imgBottom.setImageResource(arrGuitar.get(note).getImagebottom());
-        imgtop.setImageResource(arrGuitar.get(note).getImageTop());
+
     }
 
     void changePosition(int p) {
 
         boolean OutOfRange = p < 0 || p >= arrGuitar.size();
         if (!OutOfRange) {
-            note = p;
+            startnote = p;
         }
-        playNote(note);
-        setimage(note);
+        playNote(startnote);
+        setimage(startnote);
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void setTintcolorPalette(float note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.45f, 1.0f);
+
+        red = (int) (color.x * 255);
+        green = (int) (color.y * 255);
+        blue = (int) (color.z * 255);
+        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatTitleColorPalette(float note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.2f, 1.0f);
+        redTitle = (int) (color.x * 255);
+        greenTitle = (int) (color.y * 255);
+        blueTitle = (int) (color.z * 255);
+    }
+
+    void setColorTop(int a) {
+        imgtop.setImageResource(listImageTop[a]);
+
+    }
+
+
+    public void ClickPaleteMain() {
+
+        rdbMainPalette1.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String text = rdbMainPalette1.getText().toString();
+                final int n1 = conVertNote.getNoteByName(text);
+                notePalete = conVertNote.getNoteByNameColorTop(text);
+
+                if (n1 == -1) {
+
+
+                } else {
+                    playNote(n1 + 12);
+                    setColorTop(notePalete);
+                    setTintcolorPalette(notePalete);
+                    floatTitleColorPalette(notePalete);
+                }
+            }
+        });
+        rdbMainPalette2.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String text = rdbMainPalette2.getText().toString();
+                final int n2 = conVertNote.getNoteByName(text);
+                notePalete = conVertNote.getNoteByNameColorTop(text);
+
+                if (n2 == -1) {
+                } else {
+                    playNote(n2 + 12);
+                    setColorTop(notePalete);
+                    setTintcolorPalette(notePalete);
+                    floatTitleColorPalette(notePalete);
+
+                }
+            }
+        });
+        rdbMainPalette3.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String text = rdbMainPalette3.getText().toString();
+                final int n3 = conVertNote.getNoteByName(text);
+                notePalete = conVertNote.getNoteByNameColorTop(text);
+
+                if (n3 == -1) {
+                } else {
+                    playNote(n3 + 12);
+                    setColorTop(notePalete);
+                    setTintcolorPalette(notePalete);
+                    floatTitleColorPalette(notePalete);
+                }
+            }
+        });
+        rdbMainPalette4.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String text = rdbMainPalette4.getText().toString();
+                final int n4 = conVertNote.getNoteByName(text);
+                notePalete = conVertNote.getNoteByNameColorTop(text);
+
+                if (n4 == -1) {
+                } else {
+                    playNote(n4 + 12);
+                    setColorTop(notePalete);
+                    setTintcolorPalette(notePalete);
+                    floatTitleColorPalette(notePalete);
+                }
+            }
+        });
+        rdbMainPalette5.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                String text = rdbMainPalette5.getText().toString();
+                final int n5 = conVertNote.getNoteByName(text);
+                notePalete = conVertNote.getNoteByNameColorTop(text);
+
+                if (n5 == -1) {
+                } else {
+                    playNote(n5 + 12);
+                    setColorTop(notePalete);
+                    setTintcolorPalette(notePalete);
+                    floatTitleColorPalette(notePalete);
+                }
+
+
+            }
+        });
+        rdbMainPalette6.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                String text = rdbMainPalette6.getText().toString();
+                final int n6 = conVertNote.getNoteByName(text);
+                notePalete = conVertNote.getNoteByNameColorTop(text);
+
+                if (n6 == -1) {
+                } else {
+                    playNote(n6 + 12);
+                    setColorTop(notePalete);
+                    setTintcolorPalette(notePalete);
+                    floatTitleColorPalette(notePalete);
+
+                }
+
+
+            }
+        });
+
+    }
 
     private long nativeContextPtr = 0;
 
@@ -285,12 +422,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setimageTopBottom("noteoctive");
+        setimageTopBottom(startnote);
         conVertNote = new ConVertNote();
-        getSamplerate();
+
         clickimagetop();
-        floatTitleColor();
-        floatColor();
+
+        floatTitleColorPalette(newnote);
+        setTintcolorPalette(newnote);
         playBtnNext();
         playBtnNectOctive();
         playBtnPre();
@@ -300,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
         RecodingDroneTuner droneTuner = new RecodingDroneTuner();
         droneTuner.recordAudio();
         segmentedMainGroup.setVisibility(sharedPreferences.getInt("invisible", View.INVISIBLE));
-        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
+        // segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
 
 
     }
@@ -380,9 +518,7 @@ public class MainActivity extends AppCompatActivity {
         btnmainNextOctive = findViewById(R.id.btnnextx2);
         btnmainPre = findViewById(R.id.btnpre);
         btnmainPreOctive = findViewById(R.id.btnprex2);
-        segmentedGroupSelection = findViewById(R.id.segmentedSelection);
 
-        lvpreset = findViewById(R.id.lvPreset);
         imgBottom = findViewById(R.id.imgbottom);
         imgtop = findViewById(R.id.imgtop);
         rdbpreset = findViewById(R.id.rdbPreset);
@@ -402,14 +538,6 @@ public class MainActivity extends AppCompatActivity {
         rdbMainPalette4.setText(SlectNumber4);
         rdbMainPalette5.setText(SlectNumber5);
         rdbMainPalette6.setText(SlectNumber6);
-
-        rdbMainPalette1.setText(SlectNumber1);
-        rdbMainPalette2.setText(SlectNumber2);
-        rdbMainPalette3.setText(SlectNumber3);
-        rdbMainPalette4.setText(SlectNumber4);
-        rdbMainPalette5.setText(SlectNumber5);
-        rdbMainPalette6.setText(SlectNumber6);
-
         segmentedMainGroup.setVisibility(View.VISIBLE);
 
 
@@ -500,147 +628,6 @@ public class MainActivity extends AppCompatActivity {
         arrGuitar.add(new Guitar("d8_2x", R.mipmap.d8_2x, R.mipmap.top_d));
         arrGuitar.add(new Guitar("d_8_2x", R.mipmap.d_8_2x, R.mipmap.top_d_));
         arrGuitar.add(new Guitar("e8_2x", R.mipmap.e8_2x, R.mipmap.top_e));
-
-    }
-
-    void floatColor(String keyred, String keygreen, String keyblue) {
-        int red = sharedPreferences.getInt(keyred, 1);
-
-        int green = sharedPreferences.getInt(keygreen, 1);
-        int blue = sharedPreferences.getInt(keyblue, 1);
-        Log.e("red", String.valueOf(red));
-        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    void setTintcolorPalette(float note) {
-        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
-        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.45f, 1.0f);
-
-        red = (int) (color.x * 255);
-        green = (int) (color.y * 255);
-        blue = (int) (color.z * 255);
-        segmentedMainGroup.setTintColor(Color.rgb(red, green, blue));
-
-    }
-
-    void setColorTop(int a) {
-        imgtop.setImageResource(listImageTop[a]);
-
-    }
-
-
-    public void ClickPaleteMain() {
-
-        rdbMainPalette1.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                String text = rdbMainPalette1.getText().toString();
-                final int n1 = conVertNote.getNoteByName(text);
-                int color = conVertNote.getNoteByNameColorTop(text);
-                float color1 = (float) color;
-                if (n1 == -1) {
-
-
-                } else {
-                    playNote(n1);
-                    setColorTop(color);
-                    setTintcolorPalette(color1);
-
-
-                }
-            }
-        });
-        rdbMainPalette2.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                String text = rdbMainPalette2.getText().toString();
-                final int n2 = conVertNote.getNoteByName(text);
-                int color = conVertNote.getNoteByNameColorTop(text);
-                float color2 = (float) color;
-                if (n2 == -1) {
-                } else {
-                    playNote(n2);
-                    setColorTop(color);
-                    setTintcolorPalette(color2);
-
-                }
-            }
-        });
-        rdbMainPalette3.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                String text = rdbMainPalette3.getText().toString();
-                final int n3 = conVertNote.getNoteByName(text);
-                int color = conVertNote.getNoteByNameColorTop(text);
-                float color3 = (float) color;
-                if (n3 == -1) {
-                } else {
-                    playNote(n3);
-                    setColorTop(color);
-                    setTintcolorPalette(color3);
-                }
-            }
-        });
-        rdbMainPalette4.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                String text = rdbMainPalette4.getText().toString();
-                final int n4 = conVertNote.getNoteByName(text);
-                int color = conVertNote.getNoteByNameColorTop(text);
-                float color4 = (float) color;
-                if (n4 == -1) {
-                } else {
-                    playNote(n4);
-                    setColorTop(color);
-                    setTintcolorPalette(color4);
-                }
-            }
-        });
-        rdbMainPalette5.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-
-                String text = rdbMainPalette5.getText().toString();
-                final int n5 = conVertNote.getNoteByName(text);
-                int color = conVertNote.getNoteByNameColorTop(text);
-                float color5 = (float) color;
-                if (n5 == -1) {
-                } else {
-                    playNote(n5);
-                    setColorTop(color);
-                    setTintcolorPalette(color5);
-                }
-
-
-            }
-        });
-        rdbMainPalette6.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-
-                String text = rdbMainPalette6.getText().toString();
-                final int n6 = conVertNote.getNoteByName(text);
-                int color = conVertNote.getNoteByNameColorTop(text);
-                float color6 = (float) color;
-
-                if (n6 == -1) {
-                } else {
-                    playNote(n6);
-                    setColorTop(color);
-                    setTintcolorPalette(color6);
-
-                }
-
-
-            }
-        });
 
     }
 }

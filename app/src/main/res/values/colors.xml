@@ -6,31 +6,31 @@
 
     <color name="black">#000000</color>
 
-    <color name="colorseting">#222222</color>
+    <color name="colorseting">#111111</color>
     <color name="colorbackApp">#EEEEEE</color>
-    <color name="green">#4CAF50</color>
+    <color name="green">#336666</color>
     <color name="orange">#FF9800</color>
     <color name="textcolorPitch">#EEEEEE</color>
 
     <!-- dots inactive colors -->
-    <color name="dot_dark_screen1">#d1395c</color>
-    <color name="dot_dark_screen2">#14a895</color>
-    <color name="dot_dark_screen3">#2278d4</color>
-    <color name="dot_dark_screen4">#a854d4</color>
-    <color name="dot_dark_screen5">#d1395c</color>
-    <color name="dot_dark_screen6">#14a895</color>
-    <color name="dot_dark_screen7">#2278d4</color>
-    <color name="dot_dark_screen8">#a854d4</color>
+    <color name="dot_dark_screen1">#555555</color>
+    <color name="dot_dark_screen2">#555555</color>
+    <color name="dot_dark_screen3">#555555</color>
+    <color name="dot_dark_screen4">#555555</color>
+    <color name="dot_dark_screen5">#555555</color>
+    <color name="dot_dark_screen6">#555555</color>
+    <color name="dot_dark_screen7">#555555</color>
+    <color name="dot_dark_screen8">#555555</color>
 
     <!-- dots active colors -->
-    <color name="dot_light_screen1">#f98da5</color>
-    <color name="dot_light_screen2">#8cf9eb</color>
-    <color name="dot_light_screen3">#93c6fd</color>
-    <color name="dot_light_screen4">#e4b5fc</color>
-    <color name="dot_light_screen5">#f98da5</color>
-    <color name="dot_light_screen6">#8cf9eb</color>
-    <color name="dot_light_screen7">#93c6fd</color>
-    <color name="dot_light_screen8">#e4b5fc</color>
+    <color name="dot_light_screen1">#CCCCCC</color>
+    <color name="dot_light_screen2">#CCCCCC</color>
+    <color name="dot_light_screen3">#CCCCCC</color>
+    <color name="dot_light_screen4">#CCCCCC</color>
+    <color name="dot_light_screen5">#CCCCCC</color>
+    <color name="dot_light_screen6">#CCCCCC</color>
+    <color name="dot_light_screen7">#CCCCCC</color>
+    <color name="dot_light_screen8">#CCCCCC</color>
 
 
     <array name="array_dot_active">

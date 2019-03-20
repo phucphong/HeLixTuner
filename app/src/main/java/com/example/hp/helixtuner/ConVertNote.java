@@ -34,6 +34,7 @@ public class ConVertNote {
 
 
     int getNoteByName(String noteName) {
+
         if (noteName.equals("C2")) {
             return 0;
         } else if (noteName.equals("C#/D♭2")) {
@@ -506,6 +507,16 @@ public class ConVertNote {
             return 7;
 
         }
+        else if (noteName.equals("A1")) {
+            return 9;
+
+        } else if (noteName.equals("A#/B♭1")) {
+            return 10;
+
+        } else if (noteName.equals("B1")) {
+            return 11;
+
+        }
 
         else if (noteName.equals("none")) {
             return -1;
@@ -528,40 +539,258 @@ public class ConVertNote {
     String getImgNameByNote(int n) {
         switch (n) {
             case 0:
-                return "C";
+                return "A1";
 
             case 1:
-                return "C#";
+                return "A#/B♭1";
 
             case 2:
-                return "D";
+                return "B1";
 
             case 3:
-                return "D#";
+                return "C2";
 
             case 4:
-                return "E";
+                return "C#/D♭2";
 
             case 5:
-                return "F";
+                return "D2";
 
             case 6:
-                return "F#";
+                return "D#/E♭2";
 
             case 7:
-                return "G";
+                return "E2";
 
             case 8:
-                return "G#";
+                return "F2";
 
             case 9:
-                return "A";
+                return "F#/G♭2";
 
             case 10:
-                return "A#";
+                return "G2";
 
             case 11:
-                return "B";
+                return "G#/A♭2";
+            case 12:
+                return "A2";
+
+            case 13:
+                return "A#/B♭2";
+
+            case 14:
+                return "B2";
+
+            case 15:
+                return "C3";
+
+            case 16:
+                return "C#/D♭3";
+
+            case 17:
+                return "D3";
+
+            case 18:
+                return "D#/E♭3";
+
+            case 19:
+                return "E3";
+
+            case 20:
+                return "F3";
+
+            case 21:
+                return "F#/G♭3";
+
+            case 22:
+                return "G3";
+
+            case 23:
+                return "G#/A♭3";
+
+            case 24:
+                return "A3";
+
+            case 25:
+                return "A#/B♭3";
+
+            case 26:
+                return "B3";
+
+            case 27:
+                return "C4";
+
+            case 28:
+                return "C#/D♭4";
+
+            case 29:
+                return "D4";
+
+            case 30:
+                return "D#/E♭4";
+
+            case 31:
+                return "E4";
+
+            case 32:
+                return "F4";
+
+            case 33:
+                return "F#/G♭4";
+
+            case 34:
+                return "G4";
+
+            case 35:
+                return "G#/A♭4";
+
+            case 36:
+                return "A4";
+
+            case 37:
+                return "A#/B♭4";
+
+            case 38:
+                return "B4";
+
+            case 39:
+                return "C5";
+
+            case 40:
+                return "C#/D♭5";
+
+            case 41:
+                return "D5";
+
+            case 42:
+                return "D#/E♭5";
+
+            case 43:
+                return "E5";
+
+            case 44:
+                return "F5";
+
+            case 45:
+                return "F#/G♭5";
+                //
+            case 46:
+                return "G5";
+
+            case 47:
+                return "G#/A♭5";
+
+            case 48:
+                return "A5";
+
+            case 49:
+                return "A#/B♭5";
+
+            case 50:
+                return "B5";
+
+            case 51:
+                return "C6";
+
+            case 52:
+                return "C#/D♭6";
+
+            case 53:
+                return "D6";
+
+            case 54:
+                return "D#/E♭6";
+
+            case 55:
+                return "E6";
+
+            case 56:
+                return "F6";
+
+            case 57:
+                return "F#/G♭6";
+
+
+            case 58:
+                return "G6";
+
+            case 59:
+                return "G#/A♭6";
+
+            case 60:
+                return "A6";
+
+            case 61:
+                return "A#/B♭6";
+
+            case 62:
+                return "B6";
+
+            case 63:
+                return "C7";
+
+            case 64:
+                return "C#/D♭7";
+
+            case 65:
+                return "D7";
+
+            case 66:
+                return "D#/E♭7";
+
+            case 67:
+                return "E7";
+
+            case 68:
+                return "F7";
+
+            case 69:
+                return "F#/G♭7";
+
+                //
+            case 70:
+                return "G7";
+
+            case 71:
+                return "G#/A♭7";
+
+            case 72:
+                return "A7";
+
+            case 73:
+                return "A#/B♭7";
+
+            case 74:
+                return "B7";
+
+            case 75:
+                return "C8";
+
+            case 76:
+                return "C#/D♭8";
+
+            case 77:
+                return "D8";
+
+            case 78:
+                return "D#/E♭8";
+
+            case 79:
+                return "E8";
+
+            case 80:
+                return "F8";
+
+            case 81:
+                return "F#/G♭8";
+                //
+            case 82:
+                return "G8";
+
+            case 83:
+                return "G#/A♭8";
+
 
             default:
                 break;

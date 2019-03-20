@@ -19,7 +19,7 @@ public class Circle {
 //    int Stride_2D =2;
 //    int spp =500;
 //    float circleBuffers[] = new float[spp*2];
-    private int circleSize = 361;
+    private int circleSize = 360;
     ;//   poitn
     private int verticeSize = circleSize * 2;// gllineS noi 2 diem gan nhau
     private float vertices[] = new float[verticeSize * 6];// 1 poitn co x,y,z
@@ -71,16 +71,6 @@ public class Circle {
 
 
 
-        // create empty OpenGL ES Program
-        //  mProgram=GLES20.g
-        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
-        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
-        GLES20.glLinkProgram(mProgram);
-
-
-
-
-
 
 
 
@@ -107,6 +97,17 @@ public class Circle {
 
 
     public void draw(float[] mvpMatrix) {
+
+
+
+        // create empty OpenGL ES Program
+        //  mProgram=GLES20.g
+        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
+        GLES20.glLinkProgram(mProgram);
+
+
+
 
         GLES20.glUseProgram(mProgram);
 

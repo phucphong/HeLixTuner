@@ -50,15 +50,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 import info.hoang8f.android.segmented.SegmentedGroup;
 
 import static com.example.hp.helixtuner.BHSVtoRGB.NoteToHue;
 import static com.example.hp.helixtuner.ValidatePublic.*;
-import static com.example.hp.helixtuner.ValidatePublic.blue;
-import static com.example.hp.helixtuner.ValidatePublic.green;
-import static com.example.hp.helixtuner.ValidatePublic.red;
-import static java.lang.reflect.Array.set;
 
 
 public class SettingActivity extends Fragment {
@@ -67,7 +62,7 @@ public class SettingActivity extends Fragment {
     SharedPreferences sharedPreferences;
     private String subFolder = "/userdata";
     private String file = "helix.txt";
-    float pitch = 440.0f;
+
     int checkId;
     int SC_DisableNote = -1;
     int checkidInterval;
@@ -85,6 +80,7 @@ public class SettingActivity extends Fragment {
     RadioButton rdbMainPalete1, rdbMainPalete2, rdbMainPalete3, rdbMainPalete4, rdbMainPalete5, rdbMainPalete6;
     SegmentedGroup segmentPreset;
     Button btnmainPre, btnmainPreOctive, btnmainnext, btnmainNextOctive;
+    int redSetting, greenSetting, blueSetting, redTitleSetting, greenTitleSetting, blueTitleSetting;
 
     @TargetApi(28)
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -99,12 +95,17 @@ public class SettingActivity extends Fragment {
         init(view);
         conVertNote = new ConVertNote();
         // Set Invisible
+
         INVISIBLE();
         updateSetting();
         readSetttings();
-        setTextColor(red, green, blue);
-        setTittlecolor(redTitle,greenTitle,blueTitle);
+        floatColorSetting(newnote);
+        floatTitleSetting(newnote);
 
+        setTextColor(redSetting, greenSetting, blueSetting);
+
+        setTittlecolor(redTitleSetting, greenTitleSetting, blueTitleSetting);
+        // Log.e("notesetting", String.valueOf(startnote));
         setNumberPicker();
         clickBackapp();
         clickSeggmentControlerSelecte();
@@ -145,6 +146,25 @@ public class SettingActivity extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatColorSetting(int note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.45f, 1.0f);
+
+        redSetting = (int) (color.x * 255);
+        greenSetting = (int) (color.y * 255);
+        blueSetting = (int) (color.z * 255);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatTitleSetting(int note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.2f, 1.0f);
+
+        redTitleSetting = (int) (color.x * 255);
+        greenTitleSetting = (int) (color.y * 255);
+        blueTitleSetting = (int) (color.z * 255);
+    }
 
 
     void playNote(int note) {
@@ -241,7 +261,7 @@ public class SettingActivity extends Fragment {
         rdbMainPalete6.setText(BMNote6);
 
 
-         rdbpreset.setText(BMpreset);
+        rdbpreset.setText(BMpreset);
 
 
     }
@@ -428,7 +448,7 @@ public class SettingActivity extends Fragment {
         helix2.put(BMUS_Key_note1, "D2");
         helix2.put(BMUS_Key_note2, "A2");
         helix2.put(BMUS_Key_note3, "D3");
-        helix2.put(BMUS_Key_note4,"G3");
+        helix2.put(BMUS_Key_note4, "G3");
         helix2.put(BMUS_Key_note5, "B4");
         helix2.put(BMUS_Key_note6, "E4");
         HashMap<String, Object> helix3 = new HashMap<String, Object>();
@@ -436,77 +456,77 @@ public class SettingActivity extends Fragment {
         helix3.put(BMUS_Key_note1, "C2");
         helix3.put(BMUS_Key_note2, "G2");
         helix3.put(BMUS_Key_note3, "C3");
-        helix3.put(BMUS_Key_note4,"F3");
+        helix3.put(BMUS_Key_note4, "F3");
         helix3.put(BMUS_Key_note5, "A3");
         helix3.put(BMUS_Key_note6, "D4");
         HashMap<String, Object> helix4 = new HashMap<String, Object>();
         helix4.put(BMUS_Key_Preset, "Guitar - Drop B");
         helix4.put(BMUS_Key_note1, "B1");
-        helix4.put(BMUS_Key_note2,"F#/G♭2" );
-        helix4.put(BMUS_Key_note3,"B2");
-        helix4.put(BMUS_Key_note4,"E3");
-        helix4.put(BMUS_Key_note5,"G#/A♭3");
+        helix4.put(BMUS_Key_note2, "F#/G♭2");
+        helix4.put(BMUS_Key_note3, "B2");
+        helix4.put(BMUS_Key_note4, "E3");
+        helix4.put(BMUS_Key_note5, "G#/A♭3");
         helix4.put(BMUS_Key_note6, "C#/D♭4");
         HashMap<String, Object> helix5 = new HashMap<String, Object>();
         helix5.put(BMUS_Key_Preset, "Guitar - Double Drop D");
-        helix5.put(BMUS_Key_note1,"D1");
-        helix5.put(BMUS_Key_note2,"A2" );
+        helix5.put(BMUS_Key_note1, "D1");
+        helix5.put(BMUS_Key_note2, "A2");
         helix5.put(BMUS_Key_note3, "D3");
-        helix5.put(BMUS_Key_note4,"G3");
+        helix5.put(BMUS_Key_note4, "G3");
         helix5.put(BMUS_Key_note5, "B3");
-        helix5.put(BMUS_Key_note6,"D4" );
+        helix5.put(BMUS_Key_note6, "D4");
         HashMap<String, Object> helix6 = new HashMap<String, Object>();
         helix6.put(BMUS_Key_Preset, "Guitar - Standard tuning");
         helix6.put(BMUS_Key_note1, "E4");
-        helix6.put(BMUS_Key_note2,"A4" );
-        helix6.put(BMUS_Key_note3,"D5" );
+        helix6.put(BMUS_Key_note2, "A4");
+        helix6.put(BMUS_Key_note3, "D5");
         helix6.put(BMUS_Key_note4, "G5");
-        helix6.put(BMUS_Key_note5,"B5" );
+        helix6.put(BMUS_Key_note5, "B5");
         helix6.put(BMUS_Key_note6, "E6");
         HashMap<String, Object> helix7 = new HashMap<String, Object>();
         helix7.put(BMUS_Key_Preset, "Guitar - Open A");
         helix7.put(BMUS_Key_note1, "E2");
         helix7.put(BMUS_Key_note2, "A2");
-        helix7.put(BMUS_Key_note3,"Db3" );
-        helix7.put(BMUS_Key_note4,"E3" );
+        helix7.put(BMUS_Key_note3, "Db3");
+        helix7.put(BMUS_Key_note4, "E3");
         helix7.put(BMUS_Key_note5, "A3");
-        helix7.put(BMUS_Key_note6,"E4");
+        helix7.put(BMUS_Key_note6, "E4");
         HashMap<String, Object> helix8 = new HashMap<String, Object>();
         helix8.put(BMUS_Key_Preset, "Guitar - Slide Open A");
-        helix8.put(BMUS_Key_note1,"E2" );
-        helix8.put(BMUS_Key_note2,"A2");
-        helix8.put(BMUS_Key_note3,"E3");
+        helix8.put(BMUS_Key_note1, "E2");
+        helix8.put(BMUS_Key_note2, "A2");
+        helix8.put(BMUS_Key_note3, "E3");
         helix8.put(BMUS_Key_note4, "A3");
-        helix8.put(BMUS_Key_note5,"C#/D♭3");
+        helix8.put(BMUS_Key_note5, "C#/D♭3");
         helix8.put(BMUS_Key_note6, "E4");
         HashMap<String, Object> helix9 = new HashMap<String, Object>();
         helix9.put(BMUS_Key_Preset, "Guitar - Open C");
-        helix9.put(BMUS_Key_note1,"C2" );
-        helix9.put(BMUS_Key_note2,"G2" );
-        helix9.put(BMUS_Key_note3,"C3");
+        helix9.put(BMUS_Key_note1, "C2");
+        helix9.put(BMUS_Key_note2, "G2");
+        helix9.put(BMUS_Key_note3, "C3");
         helix9.put(BMUS_Key_note4, "G3");
         helix9.put(BMUS_Key_note5, "C3");
-        helix9.put(BMUS_Key_note6,"E4" );
+        helix9.put(BMUS_Key_note6, "E4");
         HashMap<String, Object> helix10 = new HashMap<String, Object>();
         helix10.put(BMUS_Key_Preset, "Guitar - Open D");
         helix10.put(BMUS_Key_note1, "D2");
-        helix10.put(BMUS_Key_note2,"A2");
+        helix10.put(BMUS_Key_note2, "A2");
         helix10.put(BMUS_Key_note3, "D3");
         helix10.put(BMUS_Key_note4, "F#/G♭3");
         helix10.put(BMUS_Key_note5, "A3");
-        helix10.put(BMUS_Key_note6,"D4" );
+        helix10.put(BMUS_Key_note6, "D4");
         HashMap<String, Object> helix11 = new HashMap<String, Object>();
         helix11.put(BMUS_Key_Preset, "Guitar - Open E");
         helix11.put(BMUS_Key_note1, "E2");
-        helix11.put(BMUS_Key_note2,"B2" );
-        helix11.put(BMUS_Key_note3,"E3" );
-        helix11.put(BMUS_Key_note4,"G#/A♭3" );
-        helix11.put(BMUS_Key_note5,"B3" );
+        helix11.put(BMUS_Key_note2, "B2");
+        helix11.put(BMUS_Key_note3, "E3");
+        helix11.put(BMUS_Key_note4, "G#/A♭3");
+        helix11.put(BMUS_Key_note5, "B3");
         helix11.put(BMUS_Key_note6, "E4");
         HashMap<String, Object> helix12 = new HashMap<String, Object>();
         helix12.put(BMUS_Key_Preset, "Guitar - Open C6");
-        helix12.put(BMUS_Key_note1,"D2" );
-        helix12.put(BMUS_Key_note2,"G2");
+        helix12.put(BMUS_Key_note1, "D2");
+        helix12.put(BMUS_Key_note2, "G2");
         helix12.put(BMUS_Key_note3, "D3");
         helix12.put(BMUS_Key_note4, "G3");
         helix12.put(BMUS_Key_note5, "B4");
@@ -516,10 +536,9 @@ public class SettingActivity extends Fragment {
         helix13.put(BMUS_Key_note1, "D2");
         helix13.put(BMUS_Key_note2, "G2");
         helix13.put(BMUS_Key_note3, "D3");
-        helix13.put(BMUS_Key_note4,"G3");
-        helix13.put(BMUS_Key_note5,"B3");
-        helix13.put(BMUS_Key_note6,"D4");
-
+        helix13.put(BMUS_Key_note4, "G3");
+        helix13.put(BMUS_Key_note5, "B3");
+        helix13.put(BMUS_Key_note6, "D4");
 
 
         HashMap<String, Object> helix14 = new HashMap<String, Object>();
@@ -950,19 +969,20 @@ public class SettingActivity extends Fragment {
         //set wrap true or false, try it you will know the difference
         numberPicker.setWrapSelectorWheel(false);
     }
-  int [] setTittlecolor( int red, int green , int blue){
-      int[] listColor = new int[3];
-      listColor[0] = red;
-      listColor[1] = green;
-      listColor[2] = blue;
-      txtvolume.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
-      txtNoteSection.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
-      txtNotePalettePreset.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
-      txtNotePalete.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
 
-      return  listColor;
+    int[] setTittlecolor(int red, int green, int blue) {
+        int[] listColor = new int[3];
+        listColor[0] = red;
+        listColor[1] = green;
+        listColor[2] = blue;
+        txtvolume.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
+        txtNoteSection.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
+        txtNotePalettePreset.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
+        txtNotePalete.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
 
-  }
+        return listColor;
+
+    }
 
     @RequiresApi(api = 28)
     public int[] setTextColor(int red, int green, int blue) {
@@ -973,7 +993,6 @@ public class SettingActivity extends Fragment {
         rdbpreset.setBackgroundColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         swvolume.setRightBackgroundColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         swvolume.setLeftBackgroundColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
-        // lvPreset.setBackgroundColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         segmentPreset.setTintColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         txtBackApp.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         txtTutorial.setTextColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
@@ -982,7 +1001,7 @@ public class SettingActivity extends Fragment {
         segmentedGroupInterval.setTintColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         segmentedGroupSelection.setTintColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
         segmentedGrouppalete.setTintColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
-        rdbpreset.setBackgroundColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
+        //rdbPreset.setBackgroundColor(Color.rgb(listColor[0], listColor[1], listColor[2]));
 
         return listColor;
 
@@ -1028,17 +1047,16 @@ public class SettingActivity extends Fragment {
     }
 
     public void cliclRdbPalete1() {
-        final ListView lvpreset = getActivity().findViewById(R.id.lvPreset);
+
 
         rdbPalete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String text = rdbPalete1.getText().toString();
                 final int n1 = conVertNote.getNoteByName(text);
-                if(n1==-1){
+                if (n1 == -1) {
 
-                }
-                else {
+                } else {
                     playNote(n1);
                     numberPicker.setValue(n1);
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -1062,7 +1080,6 @@ public class SettingActivity extends Fragment {
                 }
 
 
-
             }
         });
     }
@@ -1076,10 +1093,9 @@ public class SettingActivity extends Fragment {
             public void onClick(View v) {
                 String text = rdbPalete2.getText().toString();
                 final int n2 = conVertNote.getNoteByName(text);
-                if(n2==-1){
+                if (n2 == -1) {
 
-                }
-                else {
+                } else {
                     playNote(n2);
                     numberPicker.setValue(n2);
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -1112,11 +1128,10 @@ public class SettingActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 String text = rdbPalete3.getText().toString();
-               int n3 = conVertNote.getNoteByName(text);
-                if(n3==-1){
+                int n3 = conVertNote.getNoteByName(text);
+                if (n3 == -1) {
 
-                }
-                else {
+                } else {
                     playNote(n3);
                     numberPicker.setValue(n3);
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -1154,10 +1169,9 @@ public class SettingActivity extends Fragment {
             public void onClick(View v) {
                 String text = rdbPalete4.getText().toString();
                 final int n4 = conVertNote.getNoteByName(text);
-                if(n4==-1){
+                if (n4 == -1) {
 
-                }
-                else {
+                } else {
                     playNote(n4);
                     numberPicker.setValue(n4);
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -1192,10 +1206,9 @@ public class SettingActivity extends Fragment {
             public void onClick(View v) {
                 String text = rdbPalete5.getText().toString();
                 final int n5 = conVertNote.getNoteByName(text);
-                if(n5==-1){
+                if (n5 == -1) {
 
-                }
-                else {
+                } else {
                     playNote(n5);
                     numberPicker.setValue(n5);
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -1232,11 +1245,10 @@ public class SettingActivity extends Fragment {
             public void onClick(View v) {
                 String text = rdbPalete6.getText().toString();
                 final int n6 = conVertNote.getNoteByName(text);
-                if(n6==-1){
+                if (n6 == -1) {
 
 
-                }
-                else {
+                } else {
                     playNote(n6);
                     numberPicker.setValue(n6);
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -1264,8 +1276,8 @@ public class SettingActivity extends Fragment {
         });
     }
 
-    @SuppressLint("NewApi")
-    @RequiresApi(api = Build.VERSION_CODES.O)
+//    @SuppressLint("NewApi")
+//    @RequiresApi(api = Build.VERSION_CODES.O)
 //    void floatColor(int newVal, String keyred, String keygreen, String keyblue) {
 //        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
 //        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(newVal) + 2.0f / 12.0f), 0.45f, 1.0f);

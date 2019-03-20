@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ValidatePublic {
-    public static final int SAMPLE_RATE = 44100; // The sampling rate
+    public static final int SAMPLE_RATE = 48000; // The sampling rate
     public static final String LOG_TAG = "test";
 
 
@@ -38,9 +38,14 @@ public  static String BMpreset,BMNote1, BMNote2, BMNote3, BMNote4, BMNote5, BMNo
     public static String BMUS_Key_note4 = "note4";
     public static String BMUS_Key_note5 = "note5";
     public static String BMUS_Key_note6 = "note6";
-
-    public static int red, green, blue;
+     public  static int startnote = 0;
+    public  static int notePalete = 0;
+    public  static int newnote = 0;
+    public  static int newSetnote = 0;
+    public static int red,green, blue;
     public static int redTitle, greenTitle, blueTitle;
+
+
 
 
 

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.Float3;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
+import static com.example.hp.helixtuner.BHSVtoRGB.NoteToHue;
 import static com.example.hp.helixtuner.ValidatePublic.*;
 
 public class PresetActivity extends Fragment {
@@ -54,7 +56,8 @@ public class PresetActivity extends Fragment {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-    String BMpreset,BMNote1, BMNote2, BMNote3, BMNote4, BMNote5, BMNote6;
+   int redPreset,greenPreset,bluePreset,redLablelPreset,greeLablelPreset,blueLablelPreset;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -66,8 +69,9 @@ public class PresetActivity extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("helix", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        lvPreset.setBackgroundColor(Color.rgb(red, green, blue));
-        linearLayout.setBackgroundColor(Color.rgb(red, green, blue));
+
+     floatColorContentSetting(newnote);
+     floatColorLableSetting(newnote);
         myAdapter = new MyAdapter(getActivity());
         lvPreset.setAdapter(myAdapter);
         myAdapter.notifyDataSetChanged();
@@ -92,6 +96,26 @@ public class PresetActivity extends Fragment {
 
 
         return view;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatColorLableSetting(int note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.2f, 1.0f);
+
+        redLablelPreset = (int) (color.x * 255);
+        greeLablelPreset = (int) (color.y * 255);
+        blueLablelPreset = (int) (color.z * 255);
+        linearLayout.setBackgroundColor(Color.rgb(redLablelPreset, greeLablelPreset, blueLablelPreset));
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void floatColorContentSetting(int note) {
+        BHSVtoRGB bhsVtoRGB = new BHSVtoRGB();
+        Float3 color = bhsVtoRGB.bHSVToRGB((NoteToHue(note) + 2.0f / 12.0f), 0.45f, 1.0f);
+
+        redPreset= (int) (color.x * 255);
+        greenPreset = (int) (color.y * 255);
+        bluePreset = (int) (color.z * 255);
+        lvPreset.setBackgroundColor(Color.rgb(redPreset, greenPreset, bluePreset));
     }
 
     void init(View view) {

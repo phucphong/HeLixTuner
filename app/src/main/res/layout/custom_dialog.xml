@@ -6,7 +6,6 @@
     android:orientation="vertical"
 android:layout_gravity="center"
     android:layout_height="wrap_content"
-    android:background="@drawable/custom_text_view"
     android:backgroundTint="#DDDDDD"
 
   >
